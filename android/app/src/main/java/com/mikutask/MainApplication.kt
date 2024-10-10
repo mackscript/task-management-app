@@ -1,4 +1,4 @@
-package com.mikutask
+package com.rebinTask
 
 import android.app.Application
 import com.facebook.react.PackageList
