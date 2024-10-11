@@ -2,9 +2,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import Profile from '../screens/Profile/Profile';
 import Settings from '../screens/Settings/Setting';
-import Login from '../screens/Auth/Login';
+import SignUpScreen from '../screens/Auth/SignUpScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import SignInScreen from '../screens/Auth/SignInScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,7 +30,16 @@ const TabView = () => {
 const Navigation = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} options={defaultOption} />
+      <Stack.Screen
+        name="SignInScreen"
+        component={SignInScreen}
+        options={defaultOption}
+      />
+      <Stack.Screen
+        name="SignUpScreen"
+        component={SignUpScreen}
+        options={defaultOption}
+      />
       <Stack.Screen
         name="TabView"
         component={TabView}

@@ -1,16 +1,17 @@
 import React from 'react';
-import {Text, View, Button} from 'react-native';
+import MainLayout from '../../components/layout/MainLayout';
+import {Div, Text} from '../../components/common/UI';
+import {useSelector} from 'react-redux';
 
-const Setting = ({navigation}) => {
+const Setting = props => {
+  const {theme} = useSelector(state => state.theme);
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Profile')}
-      />
-    </View>
+    <MainLayout child={props} showHeader sName="dashboard" more back>
+      <Div>
+        <Text color={theme.colors.text.primary}>Setting screen</Text>
+      </Div>
+    </MainLayout>
   );
 };
-
 export default Setting;

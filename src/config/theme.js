@@ -3,20 +3,21 @@
 export const lightTheme = {
   mode: 'light',
   colors: {
-    statusBar: '#e0f2fe',
-    primary: '#3b82f6',
-    secondary: '#03DAC6',
+    primary: '#60a5fa', // blue
+    secondary: '#f0f9ff', //sky white blue
+
     background: '#FFFFFF',
     surface: '#F6F6F6',
     error: '#B00020',
     text: {
-      primary: '#fff',
+      white: '#fff',
+      primary: '#0f111b', // white
       secondary: '#757575',
       disabled: '#BDBDBD',
       hint: '#9E9E9E',
       inverse: '#FFFFFF',
     },
-    border: '#E0E0E0',
+    border: '#fff',
   },
   typography: {
     fontFamily: {
@@ -29,6 +30,12 @@ export const lightTheme = {
       large: 20,
       xLarge: 24,
     },
+  },
+  gradBG: {
+    dark: '#bfdbfe',
+    midDark: '#eff6ff',
+    midLight: '#242424',
+    light: '#3d3d3d',
   },
   spacing: {
     tiny: 4,
@@ -42,20 +49,21 @@ export const lightTheme = {
 export const darkTheme = {
   mode: 'dark',
   colors: {
-    statusBar: '#18181b',
-    primary: '#27272a',
-    secondary: '#03DAC6',
+    primary: '#030303', // dark
+
+    secondary: '#242424',
     background: '#121212',
     surface: '#1E1E1E',
     error: '#CF6679',
     text: {
       primary: '#fff',
-      secondary: '#B3B3B3',
+      secondary: '#5c5c5c',
       disabled: '#757575',
       hint: '#A0A0A0',
       inverse: '#000000',
+      white: '#fff',
     },
-    border: '#272727',
+    border: '#44403c',
   },
   typography: {
     fontFamily: {
@@ -68,6 +76,12 @@ export const darkTheme = {
       large: 20,
       xLarge: 24,
     },
+  },
+  gradBG: {
+    dark: '#171717',
+    midDark: '#242424',
+    midLight: '#242424',
+    light: '#3d3d3d',
   },
   spacing: {
     tiny: 4,
