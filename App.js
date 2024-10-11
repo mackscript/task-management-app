@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, StatusBar} from 'react-native';
 import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -17,6 +17,7 @@ const MainApp = () => {
 
   return (
     <NavigationContainer>
+      <StatusBar translucent={true} backgroundColor={'transparent'} />
       <Navigation />
     </NavigationContainer>
   );
