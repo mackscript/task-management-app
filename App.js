@@ -1,24 +1,32 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
 import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Profile from './src/screens/Profile/Profile';
-import Setting from './src/screens/Settings/Setting';
 
-const Stack = createNativeStackNavigator();
-const App = () => {
-  const colorScheme = Appearance.getColorScheme();
-  const [theme, setTheme] = useState(colorScheme === 'dark' ? true : false);
-  console.log('theme', theme);
+import Navigation from './src/navigation/Navigation';
+import store from './src/redux/store';
+import {Provider, useDispatch} from 'react-redux';
+import {loadTheme} from './src/redux/reducer/themeSlice';
+
+const MainApp = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadTheme()); // Load theme here
+  }, [dispatch]);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Setting" component={Setting} />
-      </Stack.Navigator>
+      <Navigation />
     </NavigationContainer>
+  );
+};
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <MainApp />
+    </Provider>
   );
 };
 
