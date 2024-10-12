@@ -13,13 +13,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {toggleTheme} from '../../redux/reducer/themeSlice';
 import MainLayout from '../../components/layout/MainLayout';
-import GoogleIcon from '../../assets/google.svg';
-import AppleIcon from '../../assets/apple.svg';
-import User2Icon from '../../assets/user2.svg';
-import LockIcon from '../../assets/lock.svg';
-import EyeOpen from '../../assets/eye-open.svg';
-import EyeClose from '../../assets/eye-close.svg';
-import EmailIcon from '../../assets/ai_mail.svg';
+import GoogleIcon from '../../assets/icons/google.svg';
+import AppleIcon from '../../assets/icons/apple.svg';
+import User2Icon from '../../assets/icons/user2.svg';
+import LockIcon from '../../assets/icons/lock.svg';
+import EyeOpen from '../../assets/icons/eye-open.svg';
+import EyeClose from '../../assets/icons/eye-close.svg';
+import EmailIcon from '../../assets/icons/ai_mail.svg';
 
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {fontScale} from '../../utils/utils';
@@ -44,7 +44,7 @@ const SignInScreen = props => {
             bold
             size={35}
             color={theme.colors.text.primary}>
-            Create an Account
+            Welcome Back
           </Text>
 
           <Text
@@ -53,7 +53,7 @@ const SignInScreen = props => {
             mt={10}
             bold
             color={theme.colors.text.secondary}>
-            Create an Account
+            Login to your account
           </Text>
           <Flex middle spaceb mt={20}>
             <TouchableOpacity
@@ -138,14 +138,20 @@ const SignInScreen = props => {
                 Submit
               </Text>
             }></Button>
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('SignUpScreen');
-            }}>
-            <Text center mt={20}>
+
+          <Flex center middle>
+            <Text color={theme.colors.text.secondary} center mt={20}>
               You don't have an account ?
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('SignUpScreen');
+              }}>
+              <Text ul ml={6} color={theme.colors.text.primary} center mt={20}>
+                Sign up
+              </Text>
+            </TouchableOpacity>
+          </Flex>
         </Div>
       </KeyboardAvoidingScrollView>
     </MainLayout>

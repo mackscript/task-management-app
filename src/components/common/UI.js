@@ -148,6 +148,7 @@ export const Text = props => {
         props.r != undefined ? {right: props.r} : null,
         props.b != undefined ? {bottom: props.b} : null,
         props.t != undefined ? {top: props.t} : null,
+        props.ul != undefined ? {textDecorationLine: 'underline'} : null,
 
         props.style,
       ]}

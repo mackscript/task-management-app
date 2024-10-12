@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import BackIcon from '../../assets/back.svg';
-import UserCircleIcon from '../../assets/user.svg';
+import BackIcon from '../../assets/icons/back.svg';
+import UserCircleIcon from '../../assets/icons/user.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import UI, {Button, Text} from '../common/UI';
 
