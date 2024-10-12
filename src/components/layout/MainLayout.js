@@ -18,7 +18,6 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
     child.navigation.goBack();
   };
 
-  console.log('child', children);
   return (
     <LinearGradient
       start={{x: 0, y: 0}}

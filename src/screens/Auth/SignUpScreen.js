@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Div, Text, Flex} from '../../components/common/UI';
 import {
@@ -10,6 +10,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {toggleTheme} from '../../redux/reducer/themeSlice';
@@ -23,72 +25,143 @@ import EyeClose from '../../assets/icons/eye-close.svg';
 import EmailIcon from '../../assets/icons/ai_mail.svg';
 import PhoneIcon from '../../assets/icons/call.svg';
 
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {fontScale} from '../../utils/utils';
+import * as Yup from 'yup';
 
 const SignUpScreen = props => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
-  const submitBtn = () => {
-    props.navigation.navigate('TabView');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phNumber: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .min(2, 'First Name is too short')
+      .max(50, 'First Name is too long')
+      .required('First Name is required'),
+    lastName: Yup.string()
+      .min(2, 'Last Name is too short')
+      .max(50, 'Last Name is too long')
+      .required('Last Name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    phNumber: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits')
+      .required('Phone number is required'),
+    password: Yup.string()
+      .min(8, 'Password is too short')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (name, value) => {
+    const updatedFormData = {
+      ...formData,
+      [name]: value,
+    };
+
+    setFormData(updatedFormData);
+
+    // Validate the entire form every time a field changes
+    validationSchema
+      .validate(updatedFormData, {abortEarly: false})
+      .then(() => {
+        setErrors({}); // Clear all errors if valid
+      })
+      .catch(err => {
+        const newErrors = {};
+        err.inner.forEach(error => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors); // Set errors for all fields
+      });
   };
+
+  const handleSubmit = async () => {
+    try {
+      // Validate all form data
+      await validationSchema.validate(formData, {abortEarly: false});
+
+      console.log('formData', formData);
+    } catch (error) {
+      if (error.inner) {
+        const formErrors = error.inner.reduce((acc, err) => {
+          return {...acc, [err.path]: err.message};
+        }, {});
+        setErrors(formErrors);
+      }
+    }
+  };
+
   return (
     <MainLayout child={props}>
-      <ScrollView>
-        <KeyboardAvoidingScrollView keyboardDismissMode="none">
-          <Div style={style.container}>
-            <Text
-              width="45%"
-              ml={'auto'}
-              mr={'auto'}
-              mt={Platform.OS == 'ios' ? '10%' : '30%'}
-              center
-              bold
-              size={35}
-              color={theme.colors.text.primary}>
-              Register
-            </Text>
+      {/* <ScrollView keyboardDismissMode="none"> */}
+      <KeyboardAwareScrollView keyboardDismissMode="none">
+        <Div style={style.container}>
+          <Text
+            width="45%"
+            ml={'auto'}
+            mr={'auto'}
+            mt={Platform.OS == 'ios' ? '10%' : '30%'}
+            center
+            bold
+            size={35}
+            color={theme.colors.text.primary}>
+            Register
+          </Text>
 
-            <Text
-              center
-              size={17}
-              mt={10}
-              bold
-              color={theme.colors.text.secondary}>
-              Create your new account
-            </Text>
-            <Flex middle spaceb mt={20}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
-                <GoogleIcon width={30} height={27} />
-                <Text color={theme.colors.text.primary}>Google</Text>
-              </TouchableOpacity>
+          <Text
+            center
+            size={17}
+            mt={10}
+            bold
+            color={theme.colors.text.secondary}>
+            Create your new account
+          </Text>
+          <Flex middle spaceb mt={10}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
+              <GoogleIcon width={30} height={27} />
+              <Text color={theme.colors.text.primary}>Google</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => dispatch(toggleTheme())}
-                style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
-                <AppleIcon width={23} height={22} />
-                <Text ml={4} color={theme.colors.text.primary}>
-                  Apple
-                </Text>
-              </TouchableOpacity>
-            </Flex>
-            {/* // input  */}
-            <Flex p={0} middle spaceb mt={20}>
-              <View style={style.before}></View>
-              <Text color={theme.colors.text.secondary}>
-                or
-                {/* with continue with email */}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => dispatch(toggleTheme())}
+              style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
+              <AppleIcon width={23} height={22} />
+              <Text ml={4} color={theme.colors.text.primary}>
+                Apple
               </Text>
-              <View style={style.after}></View>
-            </Flex>
-            <Div mt={30}>
-              <Flex p={0} middle spaceb>
+            </TouchableOpacity>
+          </Flex>
+          {/* // input  */}
+          <Flex p={0} middle spaceb mt={10}>
+            <View style={style.before}></View>
+            <Text color={theme.colors.text.secondary}>
+              or
+              {/* with continue with email */}
+            </Text>
+            <View style={style.after}></View>
+          </Flex>
+          <Div mt={30}>
+            <Flex p={0} middle spaceb>
+              <Div width={'48%'}>
                 <Flex
-                  width={'48%'}
                   middle
                   p={Platform.OS == 'ios' ? 10 : 0}
                   spaceb
@@ -102,14 +175,24 @@ const SignUpScreen = props => {
                     <User2Icon width={23} height={22} fill={'#000'} />
                   </Div>
                   <TextInput
+                    focusable
+                    value={formData.firstName}
+                    onChangeText={value =>
+                      handleInputChange('firstName', value)
+                    }
                     placeholderTextColor={theme.colors.text.secondary}
                     placeholder="First Name"
                     style={[style.inputStyle]}
                   />
                   {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                 </Flex>
+
+                <Text color="red" mt={4} size={12}>
+                  {errors.firstName && errors.firstName}
+                </Text>
+              </Div>
+              <Div width={'48%'}>
                 <Flex
-                  width={'48%'}
                   middle
                   p={Platform.OS == 'ios' ? 10 : 0}
                   spaceb
@@ -123,6 +206,9 @@ const SignUpScreen = props => {
                     <User2Icon width={23} height={22} fill={'#000'} />
                   </Div>
                   <TextInput
+                    focusable
+                    value={formData.lastName}
+                    onChangeText={value => handleInputChange('lastName', value)}
                     placeholderTextColor={theme.colors.text.secondary}
                     placeholder="Last Name"
                     style={[style.inputStyle]}
@@ -131,131 +217,173 @@ const SignUpScreen = props => {
                   <AppleIcon width={23} height={22} />
                 </Div> */}
                 </Flex>
+
+                <Text color="red" mt={4} size={12}>
+                  {errors.lastName && errors.lastName}
+                </Text>
+              </Div>
+            </Flex>
+
+            <Div mt={8}>
+              <Flex
+                middle
+                p={Platform.OS == 'ios' ? 10 : 0}
+                spaceb
+                bw={1}
+                br={10}
+                pl={10}
+                pr={10}
+                bg={theme.colors.secondary}
+                bc={theme.colors.border}>
+                <Div>
+                  <EmailIcon width={23} height={22} />
+                </Div>
+                <TextInput
+                  focusable
+                  value={formData.email}
+                  onChangeText={value => handleInputChange('email', value)}
+                  placeholderTextColor={theme.colors.text.secondary}
+                  placeholder="Email"
+                  style={[style.inputStyle]}
+                />
+                <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
 
-              <Div mt={20}>
-                <Flex
-                  middle
-                  p={Platform.OS == 'ios' ? 10 : 0}
-                  spaceb
-                  bw={1}
-                  br={10}
-                  pl={10}
-                  pr={10}
-                  bg={theme.colors.secondary}
-                  bc={theme.colors.border}>
-                  <Div>
-                    <EmailIcon width={23} height={22} />
-                  </Div>
-                  <TextInput
-                    placeholderTextColor={theme.colors.text.secondary}
-                    placeholder="Email"
-                    style={[style.inputStyle]}
-                  />
-                  <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
-                </Flex>
-              </Div>
-              <Div mt={20}>
-                <Flex
-                  middle
-                  p={Platform.OS == 'ios' ? 10 : 0}
-                  spaceb
-                  bw={1}
-                  br={10}
-                  pl={10}
-                  pr={10}
-                  bg={theme.colors.secondary}
-                  bc={theme.colors.border}>
-                  <Div>
-                    <PhoneIcon width={23} height={22} />
-                  </Div>
-                  <TextInput
-                    placeholderTextColor={theme.colors.text.secondary}
-                    placeholder="Mobile Number"
-                    style={[style.inputStyle]}
-                  />
-                  <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
-                </Flex>
-              </Div>
-              <Div mt={20}>
-                <Flex
-                  middle
-                  p={Platform.OS == 'ios' ? 10 : 0}
-                  spaceb
-                  bw={1}
-                  br={10}
-                  pl={10}
-                  pr={10}
-                  bg={theme.colors.secondary}
-                  bc={theme.colors.border}>
-                  <Div>
-                    <LockIcon width={23} height={22} />
-                  </Div>
-                  <TextInput
-                    placeholderTextColor={theme.colors.text.secondary}
-                    placeholder="Password"
-                    style={[style.inputStyle]}
-                  />
-                  <Div>
-                    <EyeClose width={23} height={22} />
-                  </Div>
-                </Flex>
-              </Div>
-              <Div mt={20}>
-                <Flex
-                  middle
-                  p={Platform.OS == 'ios' ? 10 : 0}
-                  spaceb
-                  bw={1}
-                  br={10}
-                  pl={10}
-                  pr={10}
-                  bg={theme.colors.secondary}
-                  bc={theme.colors.border}>
-                  <Div>
-                    <LockIcon width={23} height={22} />
-                  </Div>
-                  <TextInput
-                    placeholderTextColor={theme.colors.text.secondary}
-                    placeholder="Confirm Password"
-                    style={[style.inputStyle]}
-                  />
-                  <Div>
-                    <EyeClose width={23} height={22} />
-                  </Div>
-                </Flex>
-              </Div>
-            </Div>
-            <Button
-              onPress={() => submitBtn()}
-              mt={30}
-              child={
-                <Text color={theme.colors.text.white} bold size={18}>
-                  Submit
-                </Text>
-              }></Button>
-
-            <Flex center middle>
-              <Text color={theme.colors.text.secondary} center mt={20}>
-                Already have an account?
+              <Text color="red" mt={4} size={12}>
+                {errors.email && errors.email}
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('SignInScreen');
-                }}>
-                <Text
-                  ul
-                  ml={6}
-                  color={theme.colors.text.primary}
-                  center
-                  mt={20}>
-                  Sign In
-                </Text>
-              </TouchableOpacity>
-            </Flex>
+            </Div>
+            <Div mt={8}>
+              <Flex
+                middle
+                p={Platform.OS == 'ios' ? 10 : 0}
+                spaceb
+                bw={1}
+                br={10}
+                pl={10}
+                pr={10}
+                bg={theme.colors.secondary}
+                bc={theme.colors.border}>
+                <Div>
+                  <PhoneIcon width={23} height={22} />
+                </Div>
+                <TextInput
+                  focusable
+                  value={formData.phNumber}
+                  onChangeText={value => handleInputChange('phNumber', value)}
+                  placeholderTextColor={theme.colors.text.secondary}
+                  placeholder="Mobile Number"
+                  style={[style.inputStyle]}
+                />
+                <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
+              </Flex>
+
+              <Text color="red" mt={4} size={12}>
+                {errors.phNumber && errors.phNumber}
+              </Text>
+            </Div>
+            <Div mt={8}>
+              <Flex
+                middle
+                p={Platform.OS == 'ios' ? 10 : 0}
+                spaceb
+                bw={1}
+                br={10}
+                pl={10}
+                pr={10}
+                bg={theme.colors.secondary}
+                bc={theme.colors.border}>
+                <Div>
+                  <LockIcon width={23} height={22} />
+                </Div>
+                <TextInput
+                  focusable
+                  value={formData.password}
+                  onChangeText={value => handleInputChange('password', value)}
+                  placeholderTextColor={theme.colors.text.secondary}
+                  placeholder="Password"
+                  secureTextEntry={showPassword}
+                  style={[style.inputStyle]}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}>
+                  {showPassword ? (
+                    <EyeClose width={23} height={22} />
+                  ) : (
+                    <EyeOpen width={23} height={22} />
+                  )}
+                </TouchableOpacity>
+              </Flex>
+
+              <Text color="red" mt={4} size={12}>
+                {errors.password && errors.password}
+              </Text>
+            </Div>
+            <Div mt={8}>
+              <Flex
+                middle
+                p={Platform.OS == 'ios' ? 10 : 0}
+                spaceb
+                bw={1}
+                br={10}
+                pl={10}
+                pr={10}
+                bg={theme.colors.secondary}
+                bc={theme.colors.border}>
+                <Div>
+                  <LockIcon width={23} height={22} />
+                </Div>
+                <TextInput
+                  focusable
+                  value={formData.confirmPassword}
+                  onChangeText={value =>
+                    handleInputChange('confirmPassword', value)
+                  }
+                  placeholderTextColor={theme.colors.text.secondary}
+                  placeholder="Confirm Password"
+                  style={[style.inputStyle]}
+                  secureTextEntry={showConfirmPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? (
+                    <EyeClose width={23} height={22} />
+                  ) : (
+                    <EyeOpen width={23} height={22} />
+                  )}
+                </TouchableOpacity>
+              </Flex>
+
+              <Text color="red" mt={4} size={12}>
+                {errors.confirmPassword && errors.confirmPassword}
+              </Text>
+            </Div>
           </Div>
-        </KeyboardAvoidingScrollView>
-      </ScrollView>
+          <Button
+            onPress={() => handleSubmit()}
+            mt={30}
+            child={
+              <Text color={theme.colors.text.white} bold size={18}>
+                Submit
+              </Text>
+            }></Button>
+
+          <Flex center middle>
+            <Text color={theme.colors.text.secondary} center mt={20}>
+              Already have an account?
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('SignInScreen');
+              }}>
+              <Text ul ml={6} color={theme.colors.text.primary} center mt={20}>
+                Sign In
+              </Text>
+            </TouchableOpacity>
+          </Flex>
+        </Div>
+      </KeyboardAwareScrollView>
+      {/* </ScrollView> */}
     </MainLayout>
   );
 };
