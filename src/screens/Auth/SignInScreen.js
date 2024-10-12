@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Div, Text, Flex} from '../../components/common/UI';
 import {
@@ -28,9 +28,19 @@ const SignInScreen = props => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phNumber: '',
+    Password: '',
+    confirmPassword: '',
+  });
+
   const submitBtn = () => {
     props.navigation.navigate('TabView');
   };
+
   return (
     <MainLayout child={props}>
       <KeyboardAvoidingScrollView keyboardDismissMode="none">

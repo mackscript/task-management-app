@@ -1,4 +1,4 @@
-package com.rebinTask
+package com.taskManagement
 
 import android.app.Application
 import com.facebook.react.PackageList

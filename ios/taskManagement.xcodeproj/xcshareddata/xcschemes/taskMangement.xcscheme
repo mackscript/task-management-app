@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "rebinTask.app"
-               BlueprintName = "rebinTask"
-               ReferencedContainer = "container:rebinTask.xcodeproj">
+               BuildableName = "taskManagement.app"
+               BlueprintName = "taskManagement"
+               ReferencedContainer = "container:taskManagement.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "rebinTaskTests.xctest"
-               BlueprintName = "rebinTaskTests"
-               ReferencedContainer = "container:rebinTask.xcodeproj">
+               BuildableName = "taskManagementTests.xctest"
+               BlueprintName = "taskManagementTests"
+               ReferencedContainer = "container:taskManagement.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "rebinTask.app"
-            BlueprintName = "rebinTask"
-            ReferencedContainer = "container:rebinTask.xcodeproj">
+            BuildableName = "taskManagement.app"
+            BlueprintName = "taskManagement"
+            ReferencedContainer = "container:taskManagement.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "rebinTask.app"
-            BlueprintName = "rebinTask"
-            ReferencedContainer = "container:rebinTask.xcodeproj">
+            BuildableName = "taskManagement.app"
+            BlueprintName = "taskManagement"
+            ReferencedContainer = "container:taskManagement.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
