@@ -22,7 +22,7 @@ import LockIcon from '../../assets/icons/lock.svg';
 import EyeOpen from '../../assets/icons/eye-open.svg';
 import EyeClose from '../../assets/icons/eye-close.svg';
 import EmailIcon from '../../assets/icons/ai_mail.svg';
-
+import * as Yup from 'yup';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {fontScale} from '../../utils/utils';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
@@ -35,16 +35,60 @@ const SignInScreen = props => {
   const {theme} = useSelector(state => state.theme);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phNumber: '',
-    Password: '',
-    confirmPassword: '',
+    userName: '',
+    password: '',
   });
 
-  const submitBtn = () => {
-    props.navigation.navigate('TabView');
+  const validationSchema = Yup.object().shape({
+    userName: Yup.string()
+      .min(2, 'Username is too short.')
+      .max(50, 'Username is too long.')
+      .required('Username is required.'),
+    password: Yup.string()
+      .min(8, 'Password is too short.')
+      .required('Password is required.'),
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (name, value) => {
+    const updatedFormData = {
+      ...formData,
+      [name]: value,
+    };
+
+    setFormData(updatedFormData);
+
+    // Validate the entire form every time a field changes
+    validationSchema
+      .validate(updatedFormData, {abortEarly: false})
+      .then(() => {
+        setErrors({}); // Clear all errors if valid
+      })
+      .catch(err => {
+        const newErrors = {};
+        err.inner.forEach(error => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors); // Set errors for all fields
+      });
+  };
+
+  const submitBtn = async () => {
+    //
+    try {
+      // Validate all form data
+      await validationSchema.validate(formData, {abortEarly: false});
+
+      console.log('formData', formData);
+      props.navigation.navigate('TabView');
+    } catch (error) {
+      if (error.inner) {
+        const formErrors = error.inner.reduce((acc, err) => {
+          return {...acc, [err.path]: err.message};
+        }, {});
+        setErrors(formErrors);
+      }
+    }
   };
 
   const checkBiometric = async () => {
@@ -114,7 +158,6 @@ const SignInScreen = props => {
 
   const checkBt = async () => {
     const {keysExist} = await rnBiometrics.biometricKeysExist();
-    console.log('keysExist', keysExist);
     const r = await rnBiometrics.createKeys();
     console.log('r', r);
 
@@ -235,9 +278,13 @@ const SignInScreen = props => {
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your username"
                   style={[style.inputStyle]}
+                  onChangeText={value => handleInputChange('userName', value)}
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
+              <Text color="red" mt={4} size={12}>
+                {errors.userName && errors.userName}
+              </Text>
             </Div>
             <Div mt={20}>
               <Flex
@@ -257,11 +304,15 @@ const SignInScreen = props => {
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your password"
                   style={[style.inputStyle]}
+                  onChangeText={value => handleInputChange('password', value)}
                 />
                 <Div>
                   <EyeClose width={23} height={22} />
                 </Div>
               </Flex>
+              <Text color="red" mt={4} size={12}>
+                {errors.password && errors.password}
+              </Text>
             </Div>
           </Div>
 
@@ -313,7 +364,7 @@ export default SignInScreen;
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    width: '90%',
+    width: '85%',
     marginLeft: 'auto',
     marginRight: 'auto',
   },
