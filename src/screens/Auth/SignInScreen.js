@@ -35,8 +35,8 @@ const SignInScreen = props => {
   const {theme} = useSelector(state => state.theme);
 
   const [formData, setFormData] = useState({
-    userName: '',
-    password: '',
+    userName: 'XXXXXXXXXXXX',
+    password: 'XXXXXXXXXXXX',
   });
 
   const validationSchema = Yup.object().shape({
@@ -80,7 +80,7 @@ const SignInScreen = props => {
       await validationSchema.validate(formData, {abortEarly: false});
 
       console.log('formData', formData);
-      props.navigation.navigate('TabView');
+      props.navigation.navigate('AuthWithCamera');
     } catch (error) {
       if (error.inner) {
         const formErrors = error.inner.reduce((acc, err) => {
@@ -318,7 +318,8 @@ const SignInScreen = props => {
 
           <TouchableOpacity
             onPress={() => {
-              props.navigation.navigate('SignUpScreen');
+              dispatch(toggleTheme());
+              // props.navigation.navigate('SignUpScreen');
             }}>
             <Text ml={6} color={theme.colors.primary} center mt={10}>
               Forgot your password?

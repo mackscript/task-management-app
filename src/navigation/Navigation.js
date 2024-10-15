@@ -6,6 +6,7 @@ import SignUpScreen from '../screens/Auth/SignUpScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SignInScreen from '../screens/Auth/SignInScreen';
+import AuthWithCamera from '../screens/Auth/AuthWithCamera';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,6 +44,11 @@ const Navigation = () => {
       <Stack.Screen
         name="TabView"
         component={TabView}
+        options={defaultOption}
+      />
+      <Stack.Screen
+        name="AuthWithCamera"
+        component={AuthWithCamera}
         options={defaultOption}
       />
     </Stack.Navigator>
