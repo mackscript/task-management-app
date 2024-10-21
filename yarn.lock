@@ -8406,23 +8406,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-vision-camera@npm:^4.5.3":
-  version: 4.5.3
-  resolution: "react-native-vision-camera@npm:4.5.3"
+"react-native-vision-camera@npm:^3.8.2":
+  version: 3.9.2
+  resolution: "react-native-vision-camera@npm:3.9.2"
   peerDependencies:
-    "@shopify/react-native-skia": "*"
     react: "*"
     react-native: "*"
-    react-native-reanimated: "*"
     react-native-worklets-core: "*"
   peerDependenciesMeta:
-    "@shopify/react-native-skia":
-      optional: true
-    react-native-reanimated:
-      optional: true
     react-native-worklets-core:
       optional: true
-  checksum: 99d57a70f93134903ae25ef798947f79804ea00e3b58cbb21131115552e6f2950d2a3be9a6a237232ca6bab7b5031aa12d9ca2df659be39dc607d75997317abc
+  checksum: b69beca5bcc486c6e4f9b11199ba46cc8552be2bb46a8b1f74851c9563f88eedf851d9c61299e2d3e507029398281a7fcbc4e2183af3ee39d75a6194bcfaf757
+  languageName: node
+  linkType: hard
+
+"react-native-worklets-core@npm:0.2.0":
+  version: 0.2.0
+  resolution: "react-native-worklets-core@npm:0.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b7c225253121174e68cfcd36829f9fb3acf5b42f6dde4deb62dbdc196fa63f86c00aa7c970fbe514fd7d7d4de7a7872f07099048d46e623accf83542a083a0e1
   languageName: node
   linkType: hard
 
@@ -9578,7 +9582,8 @@ __metadata:
     react-native-screens: ^3.34.0
     react-native-svg: ^15.7.1
     react-native-svg-transformer: ^1.5.0
-    react-native-vision-camera: ^4.5.3
+    react-native-vision-camera: ^3.8.2
+    react-native-worklets-core: 0.2.0
     react-redux: ^9.1.2
     react-test-renderer: 18.3.1
     typescript: 5.0.4

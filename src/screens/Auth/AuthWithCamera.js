@@ -1,16 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import MainLayout from '../../components/layout/MainLayout';
-import {Camera, useCameraDevices} from 'react-native-vision-camera';
-
 import {
-  runAtTargetFps,
+  Camera,
   useCameraDevice,
-  useCameraFormat,
   useFrameProcessor,
-  useLocationPermission,
-  useMicrophonePermission,
 } from 'react-native-vision-camera';
+import {Worklets} from 'react-native-worklets-core';
 
 const AuthWithCamera = props => {
   const device = useCameraDevice('front');
@@ -51,8 +47,8 @@ const AuthWithCamera = props => {
           flash: hasFlash ? 'auto' : 'off',
         });
 
-        console.log('Photo captured:', photo);
-        setCapturedPhoto(photo);
+        console.log('Photo captured:', photo.path);
+        setCapturedPhoto(photo.path);
       } catch (error) {
         console.error('Error capturing photo:', error);
         Alert.alert('Error', 'Failed to capture photo. Please try again.');
@@ -65,6 +61,15 @@ const AuthWithCamera = props => {
   //   if (device == null) {
   //     return <Text>Loading...</Text>;
   //   }
+  const handleFaceDetection = Worklets.createRunInJsFn(face => {
+    setFaces(face);
+  });
+  const frameProcessor = useFrameProcessor(frame => {
+    'worklet';
+    const objects = detectObjects(frame);
+    console.log(`Detected ${objects.length} objects.`);
+  }, []);
+
   return (
     <MainLayout showHeader child={props}>
       {hasPermission && (
@@ -73,6 +78,7 @@ const AuthWithCamera = props => {
           ref={cameraRef}
           style={StyleSheet.absoluteFill}
           device={device}
+          frameProcessor={frameProcessor}
           isActive={true}
           photo={true} // Enable photo capture
         />

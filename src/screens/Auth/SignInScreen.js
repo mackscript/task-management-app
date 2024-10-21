@@ -28,22 +28,19 @@ import {fontScale} from '../../utils/utils';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 
 const SignInScreen = props => {
-  const rnBiometrics = new ReactNativeBiometrics({
-    allowDeviceCredentials: true,
-  });
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
 
   const [formData, setFormData] = useState({
-    userName: 'XXXXXXXXXXXX',
-    password: 'XXXXXXXXXXXX',
+    email: '',
+    password: '',
   });
 
   const validationSchema = Yup.object().shape({
-    userName: Yup.string()
-      .min(2, 'Username is too short.')
-      .max(50, 'Username is too long.')
-      .required('Username is required.'),
+    email: Yup.string()
+      .email('Invalid email format.') // Ensures the string is a valid email
+      .max(50, 'Email is too long.')
+      .required('Email is required.'),
     password: Yup.string()
       .min(8, 'Password is too short.')
       .required('Password is required.'),
@@ -91,108 +88,6 @@ const SignInScreen = props => {
     }
   };
 
-  const checkBiometric = async () => {
-    await rnBiometrics
-      .isSensorAvailable()
-      .then(resultObject => {
-        console.log('resultObject', resultObject);
-        const {available, biometryType} = resultObject;
-
-        if (available && biometryType === BiometryTypes.TouchID) {
-          Alert.alert(
-            'TouchID',
-            'Would you like to enable TouchID authentication for the next time?',
-            [
-              {
-                text: 'Yes please',
-                onPress: async () => {
-                  Alert.alert(
-                    'Success!',
-                    'TouchID authentication enabled successfully!',
-                  );
-                },
-              },
-              {text: 'Cancel', style: 'cancel'},
-            ],
-          );
-        } else if (available && biometryType === BiometryTypes.FaceID) {
-          checkBt();
-        } else if (available && biometryType === BiometryTypes.Biometrics) {
-          const checkBiometrics = rnBiometrics.biometricKeysExist();
-          console.log('check', checkBiometrics);
-          // rnBiometrics
-          //   .createKeys()
-          //   .then(res => {
-          //     console.log('res', res);
-          //   })
-          // rnBiometrics
-          //   .simplePrompt({promptMessage: 'Confirm Face ID'})
-          //   .then(result => {
-          //     console.log('result', result);
-          //     const {success} = result;
-          //     if (success) {
-          //       Alert.alert('Success!', 'Face ID authentication  successful!');
-          //     } else {
-          //       Alert.alert('Failed', 'Fingerprint authentication failed.');
-          //     }
-          //   })
-          //   .catch(error => {
-          //     console.error('Error during fingerprint prompt:', error);
-          //     Alert.alert('Error', 'Fingerprint authentication failed.');
-          //   });
-        } else {
-          Alert.alert(
-            'Biometrics not supported',
-            'This device does not support biometric authentication.',
-          );
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Alert.alert(
-          'Error',
-          'An error occurred while checking biometrics availability.',
-        );
-      });
-  };
-
-  const checkBt = async () => {
-    const {keysExist} = await rnBiometrics.biometricKeysExist();
-    const r = await rnBiometrics.createKeys();
-    console.log('r', r);
-
-    if (keysExist) {
-      rnBiometrics
-        .createSignature({
-          promptMessage: 'sing in',
-          payload: '1234',
-        })
-        .then(res => {
-          console.log('res', res);
-          rnBiometrics
-            .simplePrompt({promptMessage: 'Confirm Face ID'})
-            .then(result => {
-              console.log('result', result);
-              const {success} = result;
-              if (success) {
-                Alert.alert('Success!', 'Face ID authentication  successful!');
-              } else {
-                Alert.alert('Failed', 'Fingerprint authentication failed.');
-              }
-            })
-            .catch(error => {
-              console.error('Error during fingerprint prompt:', error);
-              Alert.alert('Error', 'Fingerprint authentication failed.');
-            });
-        })
-        .catch(err => console.log('err', err));
-    } else {
-    }
-  };
-
-  useEffect(() => {
-    // checkBiometric();
-  }, []);
   // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv3UAlN9FCFkfAcM32hsyRV3tau188ry30qalA9eeSre289sw2yMmyuxygAS+jiOx3ecC66ACsEkYb3i6fFmWn3iHXIR5WLjS4Lm/BezrDO1JLwHSh5x2epRU9MgFHo4N252Vcr2b9IvTkn3HlAGUG4wJmkie1EsdYTzrI0HLj4j4+ZxlBGHZSA+/gJHNy5xZeQVc7IaYB1JZWZ4Wm9i0mSVXP1iI+SptKnBOW2Iz8X435x6f/Gev5V6A8j8EEpjZx4XjL0HhVlYSwB14S+q8jil9cD4KttxZP7qxERg94AIRC0XDy6wgOJCzESQAzKKOBVjuu7rs7pb+kwJGD7tIxwIDAQAB
   // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6ywSBYBxjSc14IOehO08We2QmZkh5U4Q6qm8Xu192xjfYVasQ/Wakb/7hY0EEHxr+54i7beuo3Stql4fifEYGbkYB9jRPw0KEXU3LcjMRE9lJAd3oE/z0PZjazWIqcanO1gUqNkCJVHCwiVo/9EdXDBwu1nW6m+IIKlNdK7RcedsUPG9ox9sOj0SFT1rAs8tCGh70rd+y0jIu+tAtNN/RRh+c6OH+cdMgBm9EIQpFAPpLlMfRcXEDhfwr74PojvU5/oh6ayZxO7rM9I0F2Wyo2vciGweDW5WH5EFTo0xBTbucsjrblqt1PABdOlOVFEP8dAXxeX64jbqK80KFfelKQIDAQAB
   // k1ZIj38SyTUen//lrwYy0MwmLn/XQ6r1QaC5qCQDPend3cwvMowTS9cSjpsVvF6wRU8WweAgGBJHpy+1v1PDsKJGPpu45XIe3AjS4u9pxqAlbxdhygCms/u0zd6mhgExE9q629aCCIpw++ne5/GBEujj6tb1NSFJnjUI/jNkqQL+K+CIp3cwvqSVlx3bmuu96THPwwmuUiOQtExd3H+SDKU0uT5YXI5CoYwnKdqxM1FeHbWIcZ9Hs9n5hzJhzNfPTv3U3Y4kZc1A01uZalp6Q1DhY5WgvZBEI3pEtVIby9e0/vBfNNrHdyodC6SdG4WKF2x2gGbs6ViT0Ed9R+PVvg==
@@ -204,7 +99,7 @@ const SignInScreen = props => {
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '10%' : '40%'}
+            mt={Platform.OS == 'ios' ? '5%' : '40%'}
             center
             bold
             size={30}
@@ -222,8 +117,7 @@ const SignInScreen = props => {
           </Text>
           <Image
             style={{
-              marginTop: '5%',
-
+              marginTop: '2%',
               width: 150,
               height: 150,
               marginLeft: 'auto',
@@ -232,7 +126,7 @@ const SignInScreen = props => {
             }}
             source={require('../../assets/imgs/welcome.png')}
           />
-          {/* <Flex middle spaceb mt={20}>
+          <Flex middle spaceb mt={10}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
@@ -252,14 +146,14 @@ const SignInScreen = props => {
                 Apple
               </Text>
             </TouchableOpacity>
-          </Flex> */}
+          </Flex>
           {/* // input  */}
-          {/* <Flex p={0} middle spaceb mt={20}>
+          <Flex p={0} middle spaceb mt={6}>
             <View style={style.before}></View>
             <Text color={theme.colors.text.secondary}>or</Text>
             <View style={style.after}></View>
-          </Flex> */}
-          <Div mt={'10%'}>
+          </Flex>
+          <Div>
             <Div mt={20}>
               <Flex
                 middle
@@ -276,17 +170,17 @@ const SignInScreen = props => {
                 </Div>
                 <TextInput
                   placeholderTextColor={theme.colors.text.secondary}
-                  placeholder="Enter your username"
+                  placeholder="Enter your email"
                   style={[style.inputStyle]}
-                  onChangeText={value => handleInputChange('userName', value)}
+                  onChangeText={value => handleInputChange('email', value)}
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
               <Text color="red" mt={4} size={12}>
-                {errors.userName && errors.userName}
+                {errors.email && errors.email}
               </Text>
             </Div>
-            <Div mt={20}>
+            <Div mt={10}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -327,27 +221,27 @@ const SignInScreen = props => {
           </TouchableOpacity>
           <Button
             onPress={() => submitBtn()}
-            mt={'10%'}
+            mt={'5%'}
             child={
               <Text color={theme.colors.text.white} bold size={18}>
                 Submit
               </Text>
             }></Button>
 
-          {/* <Flex center middle>
-            <Text color={theme.colors.text.secondary} center mt={20}>
+          <Flex center middle>
+            <Text color={theme.colors.text.secondary} center>
               You don't have an account ?
             </Text>
             <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('SignUpScreen');
               }}>
-              <Text ul ml={6} color={theme.colors.text.primary} center mt={20}>
+              <Text ul ml={6} color={theme.colors.text.primary} center>
                 Sign up
               </Text>
             </TouchableOpacity>
-          </Flex> */}
-          <Flex column center middle mt={'15%'}>
+          </Flex>
+          <Flex column center middle mt={'10%'}>
             <Text color={theme.colors.text.secondary} center>
               Powered by Rebin infotech
             </Text>
