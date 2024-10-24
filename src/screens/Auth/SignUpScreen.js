@@ -12,6 +12,7 @@ import {
   View,
   Alert,
   KeyboardAvoidingView,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {toggleTheme} from '../../redux/reducer/themeSlice';
@@ -115,7 +116,7 @@ const SignUpScreen = props => {
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '10%' : '30%'}
+            mt={Platform.OS == 'ios' ? '10%' : '15%'}
             center
             bold
             size={35}
@@ -131,6 +132,17 @@ const SignUpScreen = props => {
             color={theme.colors.text.secondary}>
             Create your new account
           </Text>
+          <Image
+            style={{
+              marginTop: '4%',
+              width: 200,
+              height: 200,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              resizeMode: 'cover',
+            }}
+            source={require('../../assets/imgs/task.png')}
+          />
           <Flex middle spaceb mt={10}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -363,7 +375,7 @@ const SignUpScreen = props => {
             onPress={() => handleSubmit()}
             mt={30}
             child={
-              <Text color={theme.colors.text.white} bold size={18}>
+              <Text color={theme.colors.text.inverse} bold size={18}>
                 Submit
               </Text>
             }></Button>

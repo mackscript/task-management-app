@@ -27,8 +27,12 @@ import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-
 import {fontScale} from '../../utils/utils';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 import {submitLogin} from '../../redux/reducer/authSlicer';
+import {useToast} from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = props => {
+  const toast = useToast();
+  const {loginLoading} = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const [showPassword, setShowPassword] = useState(true);
@@ -77,18 +81,36 @@ const SignInScreen = props => {
     //
     try {
       await validationSchema.validate(formData, {abortEarly: false});
-
-      const fromValues = {
-        email: 'em1@gmail.com',
-        password: 'dasdasdasd',
-      };
-
-      dispatch(submitLogin(fromValues))
+      dispatch(submitLogin(formData))
         .unwrap()
-        .then(res => console.log('res---->', res))
-        .catch(err => console.log('err---->', err));
+        .then(res => {
+          if (res?.status?.isSuccess) {
+            toast.hideAll();
+            AsyncStorage.setItem('token', res.data.token);
+            AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
+            AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+            toast.show(`You’ve successfully logged in!`, {
+              type: 'success',
+              placement: 'top',
+              duration: 4000,
+              offset: 30,
+              animationType: 'zoom-in',
+            });
+          }
+          props.navigation.navigate('TabView');
+        })
+        .catch(err => {
+          toast.hideAll();
+          toast.show(`${err?.status?.errorMessage}`, {
+            type: 'danger',
+            placement: 'top',
+            duration: 4000,
+            offset: 1000,
+            animationType: 'zoom-in',
+          });
+        });
 
-      // props.navigation.navigate('AuthWithCamera');
+      //
     } catch (error) {
       if (error.inner) {
         const formErrors = error.inner.reduce((acc, err) => {
@@ -108,29 +130,28 @@ const SignInScreen = props => {
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '5%' : '40%'}
+            mt={Platform.OS == 'ios' ? '5%' : '20%'}
             center
             bold
             size={30}
             color={theme.colors.text.primary}>
             Welcome Back
           </Text>
-
           <Text center size={16} mt={2} color={theme.colors.text.secondary}>
             Log in to your account
           </Text>
           <Image
             style={{
-              marginTop: '5%',
-              width: 150,
-              height: 150,
+              marginTop: '0%',
+              width: 200,
+              height: 200,
               marginLeft: 'auto',
               marginRight: 'auto',
               resizeMode: 'cover',
             }}
-            source={require('../../assets/imgs/welcome.png')}
+            source={require('../../assets/imgs/data.png')}
           />
-          <Flex middle spaceb mt={10}>
+          <Flex middle spaceb mt={2}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
@@ -174,12 +195,14 @@ const SignInScreen = props => {
                 <TextInput
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your email"
-                  style={[style.inputStyle]}
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                   onChangeText={value => handleInputChange('email', value)}
+                  autoCapitalize="none" // Disables automatic capitalization
+                  keyboardType="email-address"
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.email && errors.email}
               </Text>
             </Div>
@@ -200,7 +223,7 @@ const SignInScreen = props => {
                 <TextInput
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your password"
-                  style={[style.inputStyle]}
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                   onChangeText={value => handleInputChange('password', value)}
                   secureTextEntry={showConfirmPassword}
                 />
@@ -213,7 +236,7 @@ const SignInScreen = props => {
                   )}
                 </TouchableOpacity>
               </Flex>
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.password && errors.password}
               </Text>
             </Div>
@@ -228,14 +251,24 @@ const SignInScreen = props => {
               Forgot your password?
             </Text>
           </TouchableOpacity>
-          <Button
-            onPress={() => submitBtn()}
-            mt={'5%'}
-            child={
-              <Text color={theme.colors.text.white} bold size={18}>
-                Submit
-              </Text>
-            }></Button>
+          {loginLoading ? (
+            <Button
+              mt={'5%'}
+              child={
+                <Text color={theme.colors.border} bold size={18}>
+                  Loading...
+                </Text>
+              }></Button>
+          ) : (
+            <Button
+              onPress={() => submitBtn()}
+              mt={'5%'}
+              child={
+                <Text color={theme.colors.border} bold size={18}>
+                  Submit
+                </Text>
+              }></Button>
+          )}
 
           <Flex center middle>
             <Text color={theme.colors.text.secondary} center>

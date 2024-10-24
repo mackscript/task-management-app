@@ -118,6 +118,50 @@ export const Div = props => {
     </View>
   );
 };
+export const Touch = props => {
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}
+      style={[
+        {position: 'relative'},
+        props.bg != undefined ? {backgroundColor: props.bg} : null,
+        props.bw != undefined ? {borderWidth: props.bw} : null,
+        props.bc != undefined ? {borderColor: props.bc} : null,
+        props.br != undefined ? {borderRadius: props.br} : null,
+
+        props.ml != undefined ? {marginLeft: props.ml} : null,
+        props.mr != undefined ? {marginRight: props.mr} : null,
+        props.mb != undefined ? {marginBottom: props.mb} : null,
+        props.mt != undefined ? {marginTop: props.mt} : null,
+
+        props.p != undefined ? {padding: props.p} : null,
+        props.pl != undefined ? {paddingLeft: props.pl} : null,
+        props.pr != undefined ? {paddingRight: props.pr} : null,
+        props.pb != undefined ? {paddingBottom: props.pb} : null,
+        props.pt != undefined ? {paddingTop: props.pt} : null,
+
+        props.l != undefined ? {left: props.l} : null,
+        props.r != undefined ? {right: props.r} : null,
+        props.b != undefined ? {bottom: props.b} : null,
+        props.t != undefined ? {top: props.t} : null,
+
+        props.o != undefined ? {borderRadius: props.o} : null,
+
+        props.width != undefined ? {width: props.width} : null,
+        props.height != undefined ? {height: props.height} : null,
+
+        props.maxheight != undefined ? {maxWidth: props.maxheight} : null,
+        props.minheight != undefined ? {minHeight: props.minheight} : null,
+
+        props.minwidth != undefined ? {minWidth: props.minwidth} : null,
+        props.maxwidth != undefined ? {maxWidth: props.maxwidth} : null,
+
+        props.style,
+      ]}>
+      {props.children}
+    </TouchableOpacity>
+  );
+};
 export const Text = props => {
   return (
     <TextHelper

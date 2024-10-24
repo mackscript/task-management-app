@@ -21,6 +21,7 @@ export const {setTheme} = themeSlice.actions;
 
 export const toggleTheme = () => async (dispatch, getState) => {
   const {theme} = getState().theme;
+
   const newTheme = theme.mode === 'light' ? darkTheme : lightTheme;
   dispatch(setTheme(newTheme));
   try {

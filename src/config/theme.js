@@ -3,19 +3,17 @@
 export const lightTheme = {
   mode: 'light',
   colors: {
-    primary: '#60a5fa', // blue
-    secondary: '#f0f9ff', //sky white blue
-
-    background: '#FFFFFF',
-    surface: '#F6F6F6',
-    error: '#B00020',
+    primary: '#60a5fa', // Primary (Blue): #60a5fa – A soft medium blue.
+    secondary: '#f0f9ff', //Secondary (Sky White Blue): #f0f9ff –
+    background: '#FFFFFF', //Background (White): #FFFFFF
+    surface: '#F6F6F6', //Surface (Light Gray): #F6F6F6
+    error: '#B00020', //Error (Red): #B00020
     text: {
-      white: '#fff',
-      primary: '#0f111b', // white
-      secondary: '#757575',
-      disabled: '#BDBDBD',
-      hint: '#9E9E9E',
-      inverse: '#FFFFFF',
+      primary: '#0f111b', //Text Primary (Black): #0f111b
+      secondary: '#757575', //Text Secondary (Gray):
+      disabled: '#BDBDBD', //Text Disabled (Light Gray):
+      hint: '#9E9E9E', //Text Hint (Grayish):
+      inverse: '#FFFFFF', //Text Inverse (White)
     },
     border: '#fff',
   },
@@ -50,7 +48,6 @@ export const darkTheme = {
   mode: 'dark',
   colors: {
     primary: '#030303', // dark
-
     secondary: '#242424',
     background: '#121212',
     surface: '#1E1E1E',
@@ -61,7 +58,6 @@ export const darkTheme = {
       disabled: '#757575',
       hint: '#A0A0A0',
       inverse: '#000000',
-      white: '#fff',
     },
     border: '#44403c',
   },

@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import BackIcon from '../../assets/icons/back.svg';
 import UserCircleIcon from '../../assets/icons/user.svg';
 import LinearGradient from 'react-native-linear-gradient';
-import UI, {Button, Text} from '../common/UI';
+import UI, {Button, Text, Touch} from '../common/UI';
+import {logout} from '../../redux/reducer/authSlicer';
 
 const MainLayout = ({children, child, showHeader, sName, more, back}) => {
+  const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const backScreen = () => {
     child.navigation.goBack();
@@ -30,16 +32,16 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
         theme.gradBG.dark,
       ]}
       style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1, marginTop: 10}}>
         {showHeader && (
           <View
             style={{
-              height: 45,
+              height: 50,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: 10,
-              backgroundColor: theme.gradBG.dark,
+              backgroundColor: theme.colors.primary,
             }}>
             <View>
               {back && (
@@ -47,7 +49,7 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
                   onPress={() => backScreen()}
                   style={{flexDirection: 'row', alignItems: 'center'}}>
                   <BackIcon width={20} height={14} />
-                  <Text color={theme.colors.text.white}>Back</Text>
+                  <Text color={theme.colors.text.inverse}>Back</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -65,9 +67,15 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
 
             <View>
               {more && (
-                <View>
+                <Touch
+                  onPress={() => {
+                    dispatch(logout());
+                    setTimeout(() => {
+                      child.navigation.navigate('SignInScreen');
+                    }, 1000);
+                  }}>
                   <UserCircleIcon width={24} height={24} fill={'#fff'} />
-                </View>
+                </Touch>
               )}
             </View>
           </View>
