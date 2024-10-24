@@ -4,28 +4,32 @@ import {Alert} from 'react-native';
 import {replace} from './NavigationService'; // Import navigation functions
 import {baseURL} from './config';
 
-// Create an Axios instance
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use(async config => {
+  console.log(baseURL);
   config.baseURL = baseURL;
 
-  // const token = localStorage.getItem("_t");
+  // Retrieve token from AsyncStorage
+  // const token = await AsyncStorage.getItem('token');
 
   // if (token) {
-  //   config.headers = {
-  //     Authorization: `Bearer ${token}`,
-  //   };
-  // } else {
-  //   axios.defaults.headers.common.Authorization &&
-  //     delete axios.defaults.headers.common.Authorization;
-  //   config.headers = axios.defaults.headers;
+  //   config.headers.Authorization = `Bearer ${token}`;
   // }
+
   return config;
 });
+
 axios.interceptors.response.use(
   response => response,
   async error => {
+    if (error.response) {
+      // Server responded with a status outside the range of 2xx
+    } else if (error.request) {
+      // No response received (network error)
+    } else {
+      // Other error (could be due to setting up the request)
+    }
+
     return Promise.reject(error);
   },
 );
-
 export default axios;

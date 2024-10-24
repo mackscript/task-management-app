@@ -35,8 +35,8 @@ const SignInScreen = props => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const [formData, setFormData] = useState({
-    email: 'asd@gmial.com',
-    password: 'Password@123',
+    email: '',
+    password: '',
   });
 
   const validationSchema = Yup.object().shape({
@@ -76,12 +76,11 @@ const SignInScreen = props => {
   const submitBtn = async () => {
     //
     try {
-      // Validate all form data
       await validationSchema.validate(formData, {abortEarly: false});
-      // console.log('formData', formData);
+
       const fromValues = {
-        email: 'asd@gmial.com',
-        password: 'Password@123',
+        email: 'em1@gmail.com',
+        password: 'dasdasdasd',
       };
 
       dispatch(submitLogin(fromValues))
@@ -96,6 +95,7 @@ const SignInScreen = props => {
           return {...acc, [err.path]: err.message};
         }, {});
         setErrors(formErrors);
+        return;
       }
     }
   };
