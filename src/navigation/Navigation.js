@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect} from 'react';
+import React, {cloneElement, useEffect} from 'react';
 import Profile from '../screens/Profile/Profile';
 import Settings from '../screens/Settings/Setting';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
@@ -9,6 +9,8 @@ import SignInScreen from '../screens/Auth/SignInScreen';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
+import {ToastProvider} from 'react-native-toast-notifications';
+import {Div, Flex, Text} from '../components/common/UI';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

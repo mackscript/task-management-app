@@ -57,7 +57,7 @@ export const darkTheme = {
       secondary: '#5c5c5c',
       disabled: '#757575',
       hint: '#A0A0A0',
-      inverse: '#000000',
+      inverse: '#FFFFFF',
     },
     border: '#44403c',
   },

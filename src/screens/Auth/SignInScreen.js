@@ -102,7 +102,7 @@ const SignInScreen = props => {
         .catch(err => {
           toast.hideAll();
           toast.show(`${err?.status?.errorMessage}`, {
-            type: 'danger',
+            type: 'error',
             placement: 'top',
             duration: 4000,
             offset: 1000,
@@ -162,7 +162,15 @@ const SignInScreen = props => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                dispatch(toggleTheme());
+                // dispatch(toggleTheme());
+                toast.hideAll();
+                toast.show(`You’ve successfully logged in!`, {
+                  title: 'login :',
+                  type: 'custom',
+                  placement: 'top',
+                  duration: 2000,
+                  animationType: 'slide-in',
+                });
               }}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
               <AppleIcon width={23} height={22} />
@@ -255,7 +263,7 @@ const SignInScreen = props => {
             <Button
               mt={'5%'}
               child={
-                <Text color={theme.colors.border} bold size={18}>
+                <Text color={theme.colors.text.inverse} bold size={18}>
                   Loading...
                 </Text>
               }></Button>
@@ -264,7 +272,7 @@ const SignInScreen = props => {
               onPress={() => submitBtn()}
               mt={'5%'}
               child={
-                <Text color={theme.colors.border} bold size={18}>
+                <Text color={theme.colors.text.inverse} bold size={18}>
                   Submit
                 </Text>
               }></Button>
