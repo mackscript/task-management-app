@@ -26,14 +26,17 @@ import * as Yup from 'yup';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {fontScale} from '../../utils/utils';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
+import {submitLogin} from '../../redux/reducer/authSlicer';
 
 const SignInScreen = props => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'asd@gmial.com',
+    password: 'Password@123',
   });
 
   const validationSchema = Yup.object().shape({
@@ -75,9 +78,18 @@ const SignInScreen = props => {
     try {
       // Validate all form data
       await validationSchema.validate(formData, {abortEarly: false});
+      // console.log('formData', formData);
+      const fromValues = {
+        email: 'asd@gmial.com',
+        password: 'Password@123',
+      };
 
-      console.log('formData', formData);
-      props.navigation.navigate('AuthWithCamera');
+      dispatch(submitLogin(fromValues))
+        .unwrap()
+        .then(res => console.log('res---->', res))
+        .catch(err => console.log('err---->', err));
+
+      // props.navigation.navigate('AuthWithCamera');
     } catch (error) {
       if (error.inner) {
         const formErrors = error.inner.reduce((acc, err) => {
@@ -88,9 +100,6 @@ const SignInScreen = props => {
     }
   };
 
-  // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv3UAlN9FCFkfAcM32hsyRV3tau188ry30qalA9eeSre289sw2yMmyuxygAS+jiOx3ecC66ACsEkYb3i6fFmWn3iHXIR5WLjS4Lm/BezrDO1JLwHSh5x2epRU9MgFHo4N252Vcr2b9IvTkn3HlAGUG4wJmkie1EsdYTzrI0HLj4j4+ZxlBGHZSA+/gJHNy5xZeQVc7IaYB1JZWZ4Wm9i0mSVXP1iI+SptKnBOW2Iz8X435x6f/Gev5V6A8j8EEpjZx4XjL0HhVlYSwB14S+q8jil9cD4KttxZP7qxERg94AIRC0XDy6wgOJCzESQAzKKOBVjuu7rs7pb+kwJGD7tIxwIDAQAB
-  // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6ywSBYBxjSc14IOehO08We2QmZkh5U4Q6qm8Xu192xjfYVasQ/Wakb/7hY0EEHxr+54i7beuo3Stql4fifEYGbkYB9jRPw0KEXU3LcjMRE9lJAd3oE/z0PZjazWIqcanO1gUqNkCJVHCwiVo/9EdXDBwu1nW6m+IIKlNdK7RcedsUPG9ox9sOj0SFT1rAs8tCGh70rd+y0jIu+tAtNN/RRh+c6OH+cdMgBm9EIQpFAPpLlMfRcXEDhfwr74PojvU5/oh6ayZxO7rM9I0F2Wyo2vciGweDW5WH5EFTo0xBTbucsjrblqt1PABdOlOVFEP8dAXxeX64jbqK80KFfelKQIDAQAB
-  // k1ZIj38SyTUen//lrwYy0MwmLn/XQ6r1QaC5qCQDPend3cwvMowTS9cSjpsVvF6wRU8WweAgGBJHpy+1v1PDsKJGPpu45XIe3AjS4u9pxqAlbxdhygCms/u0zd6mhgExE9q629aCCIpw++ne5/GBEujj6tb1NSFJnjUI/jNkqQL+K+CIp3cwvqSVlx3bmuu96THPwwmuUiOQtExd3H+SDKU0uT5YXI5CoYwnKdqxM1FeHbWIcZ9Hs9n5hzJhzNfPTv3U3Y4kZc1A01uZalp6Q1DhY5WgvZBEI3pEtVIby9e0/vBfNNrHdyodC6SdG4WKF2x2gGbs6ViT0Ed9R+PVvg==
   return (
     <MainLayout child={props}>
       <KeyboardAvoidingScrollView keyboardDismissMode="none">
@@ -107,17 +116,12 @@ const SignInScreen = props => {
             Welcome Back
           </Text>
 
-          <Text
-            center
-            size={16}
-            mt={2}
-            bold
-            color={theme.colors.text.secondary}>
+          <Text center size={16} mt={2} color={theme.colors.text.secondary}>
             Log in to your account
           </Text>
           <Image
             style={{
-              marginTop: '2%',
+              marginTop: '5%',
               width: 150,
               height: 150,
               marginLeft: 'auto',
@@ -137,7 +141,6 @@ const SignInScreen = props => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                checkBiometric();
                 dispatch(toggleTheme());
               }}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
@@ -199,10 +202,16 @@ const SignInScreen = props => {
                   placeholder="Enter your password"
                   style={[style.inputStyle]}
                   onChangeText={value => handleInputChange('password', value)}
+                  secureTextEntry={showConfirmPassword}
                 />
-                <Div>
-                  <EyeClose width={23} height={22} />
-                </Div>
+                <TouchableOpacity
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? (
+                    <EyeClose width={23} height={22} />
+                  ) : (
+                    <EyeOpen width={23} height={22} />
+                  )}
+                </TouchableOpacity>
               </Flex>
               <Text color="red" mt={4} size={12}>
                 {errors.password && errors.password}
@@ -215,7 +224,7 @@ const SignInScreen = props => {
               dispatch(toggleTheme());
               // props.navigation.navigate('SignUpScreen');
             }}>
-            <Text ml={6} color={theme.colors.primary} center mt={10}>
+            <Text ml={6} color={theme.colors.text.secondary} center mt={10}>
               Forgot your password?
             </Text>
           </TouchableOpacity>
@@ -243,7 +252,7 @@ const SignInScreen = props => {
           </Flex>
           <Flex column center middle mt={'10%'}>
             <Text color={theme.colors.text.secondary} center>
-              Powered by Rebin infotech
+              Powered by mackScript
             </Text>
             <Text color={theme.colors.text.secondary} center mt={6}>
               version - 1.0.0
