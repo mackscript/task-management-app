@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import BackIcon from '../../assets/icons/back.svg';
 import UserCircleIcon from '../../assets/icons/user.svg';
 import LinearGradient from 'react-native-linear-gradient';
-import UI, {Button, Text, Touch} from '../common/UI';
+import UI, {Button, Div, Text, Touch} from '../common/UI';
 import {logout} from '../../redux/reducer/authSlicer';
 
 const MainLayout = ({children, child, showHeader, sName, more, back}) => {
@@ -46,7 +46,7 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
               paddingHorizontal: 10,
               backgroundColor: theme.colors.primary,
             }}>
-            <View>
+            <Div width={40}>
               {back && (
                 <TouchableOpacity
                   onPress={() => backScreen()}
@@ -55,7 +55,7 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
                   <Text color={theme.colors.text.inverse}>Back</Text>
                 </TouchableOpacity>
               )}
-            </View>
+            </Div>
             <View>
               {sName && (
                 <Text
