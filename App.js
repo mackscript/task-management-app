@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {cloneElement, useEffect, useState} from 'react';
 import {View, Button, StatusBar, ActivityIndicator} from 'react-native';
 import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -17,21 +17,19 @@ const MainApp = () => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const {checkTokenLoading} = useSelector(state => state.auth);
-  console.log('checkTokenLoading', checkTokenLoading);
-
   const handleTokenCheck = async () => {
+    console.log('ss');
     try {
       dispatch(checkToken())
         .unwrap()
         .then(async res => {
           console.log('res', res);
-
           const token = await AsyncStorage.getItem('token');
           const userInfo = await AsyncStorage.getItem('userInfo');
           dispatch(
             setLoginData({
               isLogin: true,
-              loginData: {
+              userData: {
                 token,
                 userInfo: JSON.parse(userInfo),
               },
@@ -39,41 +37,19 @@ const MainApp = () => {
           );
         })
         .catch(err => {
-          console.log('err', err);
+          console.log('Error checking token:', err);
           dispatch(logout());
         });
-
-      // if (checkToken.fulfilled.match(result)) {
-      //   const isValidToken = result.payload; // true or false
-
-      //   if (isValidToken) {
-      //     // Dispatch an action to set the login data
-      //     dispatch(
-      //       setLoginData({
-      //         isLogin: true,
-      //         loginData: {
-      //           token,
-      //           userInfo: JSON.parse(userInfo),
-      //         },
-      //       }),
-      //     );
-      //   } else {
-      //     // Handle the case for invalid token
-      //     dispatch(logout()); // or any other action
-      //   }
-      // }
     } catch (error) {
       console.error('Error checking token:', error);
-      // Optionally dispatch an error action to handle it in your Redux state
-      // dispatch(setError(error.message));
+      dispatch(logout());
     }
   };
   useEffect(() => {
     handleTokenCheck();
-
     dispatch(loadTheme()); // Load theme here
   }, [dispatch]);
-
+  console.log('checkTokenLoading', checkTokenLoading);
   return (
     <NavigationContainer>
       {checkTokenLoading ? (

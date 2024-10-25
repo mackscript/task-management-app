@@ -80,20 +80,19 @@ const SignInScreen = props => {
   const submitBtn = async () => {
     //
     try {
-      // await validationSchema.validate(formData, {abortEarly: false});
-      const values = {email: 'mack@gm.com', password: 'Mack@123'};
-      dispatch(submitLogin(values))
+      await validationSchema.validate(formData, {abortEarly: false});
+      dispatch(submitLogin(formData))
         .unwrap()
         .then(res => {
           if (res?.status?.isSuccess) {
             toast.hideAll();
             AsyncStorage.setItem('token', res.data.token);
-            AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
-            AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+            AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user));
+            AsyncStorage.setItem('isLogin', 'true');
             dispatch(
               setLoginData({
                 isLogin: true,
-                loginData: {
+                userData: {
                   token: res.data.token,
                   userInfo: res.data.user,
                 },
@@ -134,7 +133,10 @@ const SignInScreen = props => {
 
   return (
     <MainLayout child={props}>
-      <KeyboardAvoidingScrollView keyboardDismissMode="none">
+      <KeyboardAvoidingScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardDismissMode="none">
         <Div style={style.container}>
           <Text
             width="45%"
@@ -143,7 +145,7 @@ const SignInScreen = props => {
             mt={Platform.OS == 'ios' ? '5%' : '10%'}
             center
             bold
-            size={30}
+            size={28}
             color={theme.colors.text.primary}>
             Welcome Back
           </Text>
@@ -153,7 +155,8 @@ const SignInScreen = props => {
           <Image
             style={{
               marginTop: '10%',
-              width: 200,
+              width: Platform.OS == 'ios' ? 180 : 200,
+              height: Platform.OS == 'ios' ? 180 : 200,
               height: 200,
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -288,7 +291,7 @@ const SignInScreen = props => {
               }></Button>
           )}
 
-          <Flex center middle>
+          <Flex center middle mt={10}>
             <Text color={theme.colors.text.secondary} center>
               You don't have an account ?
             </Text>

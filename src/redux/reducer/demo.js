@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // For Rea
 
 const initialState = {
   isLogin: false, // To track if the user is logged in
-  loginData: null,
+  userData: null,
 
   //checkToken
   checkTokenLoading: false,
@@ -62,12 +62,12 @@ const AuthSlice = createSlice({
         // Update state based on AsyncStorage values
         state.isLogin = action.payload.isLogin;
         if (action.payload.isLogin) {
-          state.loginData = {
+          state.userData = {
             token: action.payload.token,
             userInfo: JSON.parse(action.payload.userInfo),
           }; // Store token if authenticated
         } else {
-          state.loginData = null;
+          state.userData = null;
         }
       });
   },

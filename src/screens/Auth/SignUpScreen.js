@@ -123,13 +123,13 @@ const SignUpScreen = props => {
           dispatch(
             setLoginData({
               isLogin: true,
-              loginData: {
+              userData: {
                 token: res.data.token,
                 userInfo: res.data.user,
               },
             }),
           );
-          toast.show(`You’ve successfully logged in!`, {
+          toast.show(`You’ve successfully registered!`, {
             type: 'success',
             placement: 'top',
             duration: 4000,
@@ -161,23 +161,26 @@ const SignUpScreen = props => {
   return (
     <MainLayout child={props}>
       {/* <ScrollView keyboardDismissMode="none"> */}
-      <KeyboardAwareScrollView keyboardDismissMode="none">
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardDismissMode="none">
         <Div style={style.container}>
           <Text
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '10%' : '5%'}
+            mt={Platform.OS == 'ios' ? '5%' : '5%'}
             center
             bold
-            size={35}
+            size={28}
             color={theme.colors.text.primary}>
             Register
           </Text>
 
           <Text
             center
-            size={17}
+            size={16}
             mt={10}
             bold
             color={theme.colors.text.secondary}>
@@ -185,9 +188,9 @@ const SignUpScreen = props => {
           </Text>
           <Image
             style={{
-              marginTop: '5%',
-              width: 200,
-              height: 200,
+              marginTop: '0%',
+              width: Platform.OS == 'ios' ? 180 : 200,
+              height: Platform.OS == 'ios' ? 180 : 200,
               marginLeft: 'auto',
               marginRight: 'auto',
               resizeMode: 'cover',
@@ -218,7 +221,7 @@ const SignUpScreen = props => {
             <Text color={theme.colors.text.secondary}>or</Text>
             <View style={style.after}></View>
           </Flex> */}
-          <Div mt={20}>
+          <Div mt={Platform.OS == 'ios' ? 8 : 10}>
             <Flex p={0} middle spaceb>
               <Div width={'48%'}>
                 <Flex
@@ -242,7 +245,10 @@ const SignUpScreen = props => {
                     }
                     placeholderTextColor={theme.colors.text.secondary}
                     placeholder="First Name"
-                    style={[style.inputStyle]}
+                    style={[
+                      style.inputStyle,
+                      {color: theme.colors.text.primary},
+                    ]}
                   />
                   {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                 </Flex>
@@ -271,7 +277,10 @@ const SignUpScreen = props => {
                     onChangeText={value => handleInputChange('lastName', value)}
                     placeholderTextColor={theme.colors.text.secondary}
                     placeholder="Last Name"
-                    style={[style.inputStyle]}
+                    style={[
+                      style.inputStyle,
+                      {color: theme.colors.text.primary},
+                    ]}
                   />
                   {/* <Div>
                   <AppleIcon width={23} height={22} />
@@ -304,7 +313,8 @@ const SignUpScreen = props => {
                   onChangeText={value => handleInputChange('email', value)}
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Email"
-                  style={[style.inputStyle]}
+                  autoCapitalize="none"
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
@@ -333,7 +343,7 @@ const SignUpScreen = props => {
                   onChangeText={value => handleInputChange('phNumber', value)}
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Mobile Number"
-                  style={[style.inputStyle]}
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
@@ -363,7 +373,7 @@ const SignUpScreen = props => {
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Password"
                   secureTextEntry={showPassword}
-                  style={[style.inputStyle]}
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}>
@@ -401,7 +411,7 @@ const SignUpScreen = props => {
                   }
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Confirm Password"
-                  style={[style.inputStyle]}
+                  style={[style.inputStyle, {color: theme.colors.text.primary}]}
                   secureTextEntry={showConfirmPassword}
                 />
                 <TouchableOpacity
@@ -429,14 +439,14 @@ const SignUpScreen = props => {
             }></Button>
 
           <Flex center middle>
-            <Text color={theme.colors.text.secondary} center mt={20}>
+            <Text color={theme.colors.text.secondary} center mt={10}>
               Already have an account?
             </Text>
             <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('SignInScreen');
               }}>
-              <Text ul ml={6} color={theme.colors.text.primary} center mt={20}>
+              <Text ul ml={6} color={theme.colors.text.primary} center mt={10}>
                 Sign In
               </Text>
             </TouchableOpacity>

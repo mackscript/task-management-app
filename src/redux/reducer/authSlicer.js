@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // For Rea
 
 const initialState = {
   isLogin: false, // To track if the user is logged in
-  loginData: null,
+  userData: null,
   loginLoading: false,
   loginError: null,
   //
@@ -60,11 +60,11 @@ const AuthSlice = createSlice({
   reducers: {
     setLoginData: (state, action) => {
       state.isLogin = action.payload.isLogin;
-      state.loginData = action.payload.loginData;
+      state.userData = action.payload.userData;
     },
     logout: state => {
-      AsyncStorage.removeItem('token'); // Clear token on logout
-      AsyncStorage.setItem('isLogin', 'false'); // Update isLogin status
+      AsyncStorage.removeItem('token');
+      AsyncStorage.setItem('isLogin', 'false');
       return initialState;
     },
   },
@@ -83,7 +83,7 @@ const AuthSlice = createSlice({
       .addCase(submitLogin.rejected, (state, action) => {
         state.loginLoading = false;
         state.isLogin = false;
-        state.loginError = action.payload.message; // Access the message properly
+        state.loginError = action.payload.message;
       })
       .addCase(submitSignUp.pending, state => {
         state.signUpIsLoading = true;
@@ -98,7 +98,7 @@ const AuthSlice = createSlice({
       .addCase(submitSignUp.rejected, (state, action) => {
         state.signUpIsLoading = false;
         state.isLogin = false;
-        state.signUpStatus = action.payload.message; // Access the message properly
+        state.signUpStatus = action.payload.message;
       })
       .addCase(checkToken.pending, state => {
         state.checkTokenLoading = true;
@@ -107,6 +107,7 @@ const AuthSlice = createSlice({
         state.checkTokenLoading = false;
       })
       .addCase(checkToken.rejected, (state, action) => {
+        console.log('first');
         state.checkTokenLoading = false;
       });
   },
