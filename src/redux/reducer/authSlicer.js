@@ -9,15 +9,16 @@ const initialState = {
   loginData: null,
   loginLoading: false,
   loginError: null,
+  //
+  signUpIsLoading: false,
+  signUpStatus: null,
 };
 
 export const submitLogin = createAsyncThunk(
   'user/login',
   async (values, {rejectWithValue}) => {
-    console.log('values', values);
     try {
       const {data} = await axiosInstance.post(`/users/login`, values);
-      console.log('data', data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -25,11 +26,21 @@ export const submitLogin = createAsyncThunk(
   },
 );
 
+export const submitSignUp = createAsyncThunk(
+  'user/submitSignUp',
+  async (values, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.post(`/users/signup`, values);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 // New function to check authentication status
 export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
   const token = await AsyncStorage.getItem('token');
   const userInfo = await AsyncStorage.getItem('userInfo');
-
   const isLogin = await AsyncStorage.getItem('isLogin');
 
   if (token && isLogin === 'true') {
@@ -53,7 +64,7 @@ const AuthSlice = createSlice({
     builder
       .addCase(submitLogin.pending, state => {
         state.loginLoading = true;
-
+        state.isLogin = false;
         state.loginError = '';
       })
       .addCase(submitLogin.fulfilled, (state, action) => {
@@ -63,8 +74,23 @@ const AuthSlice = createSlice({
       })
       .addCase(submitLogin.rejected, (state, action) => {
         state.loginLoading = false;
-
+        state.isLogin = false;
         state.loginError = action.payload.message; // Access the message properly
+      })
+      .addCase(submitSignUp.pending, state => {
+        state.signUpIsLoading = true;
+        state.signUpStatus = '';
+        state.isLogin = false;
+      })
+      .addCase(submitSignUp.fulfilled, (state, action) => {
+        state.signUpIsLoading = false;
+        state.isLogin = true;
+        state.signUpStatus = '';
+      })
+      .addCase(submitSignUp.rejected, (state, action) => {
+        state.signUpIsLoading = false;
+        state.isLogin = false;
+        state.signUpStatus = action.payload.message; // Access the message properly
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
         // Update state based on AsyncStorage values

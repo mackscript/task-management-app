@@ -29,8 +29,14 @@ import PhoneIcon from '../../assets/icons/call.svg';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {fontScale} from '../../utils/utils';
 import * as Yup from 'yup';
+import {ClipPath} from 'react-native-svg';
+import {submitSignUp} from '../../redux/reducer/authSlicer';
+import {useToast} from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = props => {
+  const toast = useToast();
+
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const [showPassword, setShowPassword] = useState(true);
@@ -59,6 +65,10 @@ const SignUpScreen = props => {
       .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits')
       .required('Phone number is required'),
     password: Yup.string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+      )
       .min(8, 'Password is too short')
       .required('Password is required'),
     confirmPassword: Yup.string()
@@ -95,8 +105,40 @@ const SignUpScreen = props => {
     try {
       // Validate all form data
       await validationSchema.validate(formData, {abortEarly: false});
-
-      console.log('formData', formData);
+      // const values = {
+      //   confirmPassword: 'Mack@123',
+      //   email: 'mack@gmail.com',
+      //   firstName: 'mack',
+      //   lastName: 'parker2',
+      //   password: 'Mack@123',
+      //   phNumber: '7001186809',
+      // };
+      dispatch(submitSignUp(formData))
+        .unwrap()
+        .then(res => {
+          toast.hideAll();
+          AsyncStorage.setItem('token', res.data.token);
+          AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
+          AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+          toast.show(`You’ve successfully logged in!`, {
+            type: 'success',
+            placement: 'top',
+            duration: 4000,
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+          props.navigation.navigate('TabView');
+        })
+        .catch(err => {
+          toast.hideAll();
+          toast.show(`${err?.status?.errorMessage}`, {
+            type: 'error',
+            placement: 'top',
+            duration: 4000,
+            offset: 1000,
+            animationType: 'zoom-in',
+          });
+        });
     } catch (error) {
       if (error.inner) {
         const formErrors = error.inner.reduce((acc, err) => {
@@ -116,7 +158,7 @@ const SignUpScreen = props => {
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '10%' : '15%'}
+            mt={Platform.OS == 'ios' ? '10%' : '5%'}
             center
             bold
             size={35}
@@ -134,16 +176,16 @@ const SignUpScreen = props => {
           </Text>
           <Image
             style={{
-              marginTop: '4%',
+              marginTop: '5%',
               width: 200,
               height: 200,
               marginLeft: 'auto',
               marginRight: 'auto',
               resizeMode: 'cover',
             }}
-            source={require('../../assets/imgs/task.png')}
+            source={require('../../assets/imgs/data.png')}
           />
-          <Flex middle spaceb mt={10}>
+          {/* <Flex middle spaceb mt={5}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
@@ -160,17 +202,14 @@ const SignUpScreen = props => {
                 Apple
               </Text>
             </TouchableOpacity>
-          </Flex>
+          </Flex> */}
           {/* // input  */}
-          <Flex p={0} middle spaceb mt={10}>
+          {/* <Flex p={0} middle spaceb mt={5}>
             <View style={style.before}></View>
-            <Text color={theme.colors.text.secondary}>
-              or
-              {/* with continue with email */}
-            </Text>
+            <Text color={theme.colors.text.secondary}>or</Text>
             <View style={style.after}></View>
-          </Flex>
-          <Div mt={30}>
+          </Flex> */}
+          <Div mt={20}>
             <Flex p={0} middle spaceb>
               <Div width={'48%'}>
                 <Flex
@@ -199,7 +238,7 @@ const SignUpScreen = props => {
                   {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                 </Flex>
 
-                <Text color="red" mt={4} size={12}>
+                <Text color={theme.colors.error} mt={4} size={12}>
                   {errors.firstName && errors.firstName}
                 </Text>
               </Div>
@@ -230,7 +269,7 @@ const SignUpScreen = props => {
                 </Div> */}
                 </Flex>
 
-                <Text color="red" mt={4} size={12}>
+                <Text color={theme.colors.error} mt={4} size={12}>
                   {errors.lastName && errors.lastName}
                 </Text>
               </Div>
@@ -261,7 +300,7 @@ const SignUpScreen = props => {
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
 
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.email && errors.email}
               </Text>
             </Div>
@@ -290,7 +329,7 @@ const SignUpScreen = props => {
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
 
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.phNumber && errors.phNumber}
               </Text>
             </Div>
@@ -327,7 +366,7 @@ const SignUpScreen = props => {
                 </TouchableOpacity>
               </Flex>
 
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.password && errors.password}
               </Text>
             </Div>
@@ -366,7 +405,7 @@ const SignUpScreen = props => {
                 </TouchableOpacity>
               </Flex>
 
-              <Text color="red" mt={4} size={12}>
+              <Text color={theme.colors.error} mt={4} size={12}>
                 {errors.confirmPassword && errors.confirmPassword}
               </Text>
             </Div>

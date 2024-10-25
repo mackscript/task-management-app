@@ -5,7 +5,6 @@ import {replace} from './NavigationService'; // Import navigation functions
 import {baseURL} from './config';
 
 axios.interceptors.request.use(async config => {
-  console.log(baseURL);
   config.baseURL = baseURL;
 
   // Retrieve token from AsyncStorage

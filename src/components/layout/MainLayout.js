@@ -32,7 +32,7 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
         theme.gradBG.dark,
       ]}
       style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1, marginTop: 10}}>
+      <SafeAreaView style={{flex: 1, marginTop: 45}}>
         {showHeader && (
           <View
             style={{

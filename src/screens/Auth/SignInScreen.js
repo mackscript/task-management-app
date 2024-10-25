@@ -130,7 +130,7 @@ const SignInScreen = props => {
             width="45%"
             ml={'auto'}
             mr={'auto'}
-            mt={Platform.OS == 'ios' ? '5%' : '20%'}
+            mt={Platform.OS == 'ios' ? '5%' : '10%'}
             center
             bold
             size={30}
@@ -142,7 +142,7 @@ const SignInScreen = props => {
           </Text>
           <Image
             style={{
-              marginTop: '0%',
+              marginTop: '10%',
               width: 200,
               height: 200,
               marginLeft: 'auto',
@@ -151,7 +151,7 @@ const SignInScreen = props => {
             }}
             source={require('../../assets/imgs/data.png')}
           />
-          <Flex middle spaceb mt={2}>
+          {/* <Flex middle spaceb mt={2}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[style.btn, {backgroundColor: theme.colors.secondary}]}>
@@ -179,14 +179,14 @@ const SignInScreen = props => {
               </Text>
             </TouchableOpacity>
           </Flex>
-          {/* // input  */}
+          
           <Flex p={0} middle spaceb mt={6}>
             <View style={style.before}></View>
             <Text color={theme.colors.text.secondary}>or</Text>
             <View style={style.after}></View>
-          </Flex>
+          </Flex> */}
           <Div>
-            <Div mt={20}>
+            <Div mt={40}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -255,7 +255,7 @@ const SignInScreen = props => {
               dispatch(toggleTheme());
               // props.navigation.navigate('SignUpScreen');
             }}>
-            <Text ml={6} color={theme.colors.text.secondary} center mt={10}>
+            <Text ml={6} color={theme.colors.text.secondary} center mt={1}>
               Forgot your password?
             </Text>
           </TouchableOpacity>
