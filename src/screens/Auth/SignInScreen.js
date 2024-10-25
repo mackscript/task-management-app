@@ -26,7 +26,7 @@ import * as Yup from 'yup';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {fontScale} from '../../utils/utils';
 import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
-import {submitLogin} from '../../redux/reducer/authSlicer';
+import {setLoginData, submitLogin} from '../../redux/reducer/authSlicer';
 import {useToast} from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -80,8 +80,9 @@ const SignInScreen = props => {
   const submitBtn = async () => {
     //
     try {
-      await validationSchema.validate(formData, {abortEarly: false});
-      dispatch(submitLogin(formData))
+      // await validationSchema.validate(formData, {abortEarly: false});
+      const values = {email: 'mack@gm.com', password: 'Mack@123'};
+      dispatch(submitLogin(values))
         .unwrap()
         .then(res => {
           if (res?.status?.isSuccess) {
@@ -89,6 +90,15 @@ const SignInScreen = props => {
             AsyncStorage.setItem('token', res.data.token);
             AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
             AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+            dispatch(
+              setLoginData({
+                isLogin: true,
+                loginData: {
+                  token: res.data.token,
+                  userInfo: res.data.user,
+                },
+              }),
+            );
             toast.show(`You’ve successfully logged in!`, {
               type: 'success',
               placement: 'top',

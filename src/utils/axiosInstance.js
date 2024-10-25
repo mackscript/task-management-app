@@ -8,11 +8,11 @@ axios.interceptors.request.use(async config => {
   config.baseURL = baseURL;
 
   // Retrieve token from AsyncStorage
-  // const token = await AsyncStorage.getItem('token');
+  const token = await AsyncStorage.getItem('token');
 
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
+  if (token) {
+    config.headers.authorization = `${token}`;
+  }
 
   return config;
 });

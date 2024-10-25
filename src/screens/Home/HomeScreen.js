@@ -5,7 +5,8 @@ import {useSelector} from 'react-redux';
 
 const HomeScreen = props => {
   const {theme} = useSelector(state => state.theme);
-
+  const {loginData} = useSelector(state => state.auth);
+  console.log('loginData', loginData);
   return (
     <MainLayout child={props} showHeader sName="dashboard" more>
       <Div>

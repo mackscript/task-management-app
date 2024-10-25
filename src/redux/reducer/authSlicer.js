@@ -12,16 +12,20 @@ const initialState = {
   //
   signUpIsLoading: false,
   signUpStatus: null,
+
+  //checkToken
+  checkTokenLoading: false,
 };
 
 export const submitLogin = createAsyncThunk(
   'user/login',
   async (values, {rejectWithValue}) => {
+    console.log('values', values);
     try {
       const {data} = await axiosInstance.post(`/users/login`, values);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data || 'An error occurred');
     }
   },
 );
@@ -33,27 +37,31 @@ export const submitSignUp = createAsyncThunk(
       const {data} = await axiosInstance.post(`/users/signup`, values);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data || 'An error occurred');
     }
   },
 );
-// New function to check authentication status
-export const checkAuth = createAsyncThunk('user/checkAuth', async () => {
-  const token = await AsyncStorage.getItem('token');
-  const userInfo = await AsyncStorage.getItem('userInfo');
-  const isLogin = await AsyncStorage.getItem('isLogin');
 
-  if (token && isLogin === 'true') {
-    return {token, userInfo, isLogin: true};
-  } else {
-    return {token: null, isLogin: false};
-  }
-});
+export const checkToken = createAsyncThunk(
+  'user/checkToken',
+  async (values, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.get(`/users/checkToken`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
+  },
+);
 
 const AuthSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
+    setLoginData: (state, action) => {
+      state.isLogin = action.payload.isLogin;
+      state.loginData = action.payload.loginData;
+    },
     logout: state => {
       AsyncStorage.removeItem('token'); // Clear token on logout
       AsyncStorage.setItem('isLogin', 'false'); // Update isLogin status
@@ -92,19 +100,16 @@ const AuthSlice = createSlice({
         state.isLogin = false;
         state.signUpStatus = action.payload.message; // Access the message properly
       })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        // Update state based on AsyncStorage values
-        state.isLogin = action.payload.isLogin;
-        if (action.payload.isLogin) {
-          state.loginData = {
-            token: action.payload.token,
-            userInfo: JSON.parse(action.payload.userInfo),
-          }; // Store token if authenticated
-        } else {
-          state.loginData = null;
-        }
+      .addCase(checkToken.pending, state => {
+        state.checkTokenLoading = true;
+      })
+      .addCase(checkToken.fulfilled, (state, action) => {
+        state.checkTokenLoading = false;
+      })
+      .addCase(checkToken.rejected, (state, action) => {
+        state.checkTokenLoading = false;
       });
   },
 });
-export const {logout} = AuthSlice.actions;
+export const {logout, setLoginData} = AuthSlice.actions;
 export default AuthSlice.reducer;

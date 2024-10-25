@@ -30,7 +30,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {fontScale} from '../../utils/utils';
 import * as Yup from 'yup';
 import {ClipPath} from 'react-native-svg';
-import {submitSignUp} from '../../redux/reducer/authSlicer';
+import {setLoginData, submitSignUp} from '../../redux/reducer/authSlicer';
 import {useToast} from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -120,6 +120,15 @@ const SignUpScreen = props => {
           AsyncStorage.setItem('token', res.data.token);
           AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
           AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+          dispatch(
+            setLoginData({
+              isLogin: true,
+              loginData: {
+                token: res.data.token,
+                userInfo: res.data.user,
+              },
+            }),
+          );
           toast.show(`You’ve successfully logged in!`, {
             type: 'success',
             placement: 'top',
