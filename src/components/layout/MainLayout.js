@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Dimensions,
+  Image,
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
@@ -9,11 +10,24 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import BackIcon from '../../assets/icons/back.svg';
 import UserCircleIcon from '../../assets/icons/user.svg';
+import Notification from '../../assets/icons/notification.svg';
+
 import LinearGradient from 'react-native-linear-gradient';
 import UI, {Button, Div, Text, Touch} from '../common/UI';
 import {logout} from '../../redux/reducer/authSlicer';
+import {toggleTheme} from '../../redux/reducer/themeSlice';
+import Svg, {Path} from 'react-native-svg';
 
-const MainLayout = ({children, child, showHeader, sName, more, back}) => {
+const MainLayout = ({
+  children,
+  child,
+  wl,
+  pf,
+  showHeader,
+  sName,
+  more,
+  back,
+}) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const backScreen = () => {
@@ -35,30 +49,67 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
       <SafeAreaView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        style={{flex: 1, marginTop: 45}}>
+        style={{flex: 1, marginTop: 48}}>
         {showHeader && (
           <View
             style={{
-              height: 50,
+              // height: 50,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: 10,
-              backgroundColor: theme.colors.primary,
+              // backgroundColor: theme.colors.primary,
             }}>
-            <Div width={40}>
+            <Div width={wl ? 160 : 40}>
               {back && (
-                <TouchableOpacity
+                <Touch
+                  ml={10}
                   onPress={() => backScreen()}
                   style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <BackIcon width={20} height={14} />
-                  <Text color={theme.colors.text.inverse}>Back</Text>
-                </TouchableOpacity>
+                  <Svg
+                    width="30"
+                    height="40"
+                    viewBox="0 0 17 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <Path
+                      d="M5.91667 8L0.75 4.5M0.75 4.5L5.91667 1M0.75 4.5L16.25 4.5"
+                      stroke={theme.colors.text.primary}
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </Svg>
+
+                  {/* <Text color={theme.colors.text.inverse}>Back</Text> */}
+                </Touch>
+              )}
+              {wl && (
+                <Div>
+                  <Text
+                    size={20}
+                    style={{
+                      color: theme.colors.text.primary,
+                      textTransform: 'capitalize',
+                    }}>
+                    Welcome back,
+                  </Text>
+                  <Text
+                    bold
+                    size={20}
+                    style={{
+                      color: theme.colors.text.primary,
+                      textTransform: 'capitalize',
+                    }}>
+                    Ripon!
+                  </Text>
+                </Div>
               )}
             </Div>
             <View>
               {sName && (
                 <Text
+                  size={20}
                   style={{
                     color: theme.colors.text.primary,
                     textTransform: 'capitalize',
@@ -78,6 +129,38 @@ const MainLayout = ({children, child, showHeader, sName, more, back}) => {
                     }, 1000);
                   }}>
                   <UserCircleIcon width={24} height={24} fill={'#fff'} />
+                </Touch>
+              )}
+              {pf && (
+                <Touch
+                  onPress={() => {
+                    dispatch(toggleTheme());
+                  }}
+                  bg={theme.colors.primary}
+                  width={60}
+                  height={60}
+                  br={50}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // overflow: 'hidden',
+                  }}>
+                  <Image
+                    style={{width: 60, borderRadius: 50, height: 60}}
+                    source={{
+                      uri: 'https://avatars.githubusercontent.com/u/68142061?v=4',
+                    }}
+                  />
+                  <View
+                    style={{
+                      position: 'absolute',
+                      zIndex: 1,
+                      left: -10,
+                      top: 0,
+                      transform: [{rotate: '20deg'}],
+                    }}>
+                    <Notification width={25} height={25} fill={'red'} />
+                  </View>
                 </Touch>
               )}
             </View>

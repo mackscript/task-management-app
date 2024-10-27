@@ -106,7 +106,7 @@ const SignInScreen = props => {
               animationType: 'zoom-in',
             });
           }
-          props.navigation.navigate('TabView');
+          props.navigation.navigate('OtpVerification');
         })
         .catch(err => {
           toast.hideAll();

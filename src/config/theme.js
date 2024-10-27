@@ -8,6 +8,9 @@ export const lightTheme = {
     background: '#FFFFFF', //Background (White): #FFFFFF
     surface: '#F6F6F6', //Surface (Light Gray): #F6F6F6
     error: '#B00020', //Error (Red): #B00020
+    op: '#757575',
+    opb: '#fff',
+    backOp: '#afd2fc',
     text: {
       primary: '#0f111b', //Text Primary (Black): #0f111b
       secondary: '#757575', //Text Secondary (Gray):
@@ -52,6 +55,9 @@ export const darkTheme = {
     background: '#121212',
     surface: '#1E1E1E',
     error: '#CF6679',
+    op: '#757575',
+    opb: '#030303',
+    backOp: '#323232',
     text: {
       primary: '#fff',
       secondary: '#5c5c5c',

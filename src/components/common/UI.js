@@ -128,6 +128,8 @@ export const Touch = props => {
         props.bw != undefined ? {borderWidth: props.bw} : null,
         props.bc != undefined ? {borderColor: props.bc} : null,
         props.br != undefined ? {borderRadius: props.br} : null,
+        props.center != undefined ? {justifyContent: center} : null,
+        props.alc != undefined ? {alignItems: center} : null,
 
         props.ml != undefined ? {marginLeft: props.ml} : null,
         props.mr != undefined ? {marginRight: props.mr} : null,

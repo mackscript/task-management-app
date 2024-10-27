@@ -17,13 +17,16 @@ const MainApp = () => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
   const {checkTokenLoading} = useSelector(state => state.auth);
+  const [loading, setLoading] = useState(false);
   const handleTokenCheck = async () => {
-    console.log('ss');
+    setLoading(true);
     try {
       dispatch(checkToken())
         .unwrap()
         .then(async res => {
-          console.log('res', res);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
           const token = await AsyncStorage.getItem('token');
           const userInfo = await AsyncStorage.getItem('userInfo');
           dispatch(
@@ -37,11 +40,12 @@ const MainApp = () => {
           );
         })
         .catch(err => {
+          setLoading(false);
           console.log('Error checking token:', err);
           dispatch(logout());
         });
     } catch (error) {
-      console.error('Error checking token:', error);
+      setLoading(false);
       dispatch(logout());
     }
   };
@@ -49,11 +53,16 @@ const MainApp = () => {
     handleTokenCheck();
     dispatch(loadTheme()); // Load theme here
   }, [dispatch]);
-  console.log('checkTokenLoading', checkTokenLoading);
+
   return (
     <NavigationContainer>
-      {checkTokenLoading ? (
+      {loading ? (
         <MainLayout>
+          <StatusBar
+            translucent={true}
+            barStyle={theme.mode == 'light' ? 'dark-content' : 'light-content'}
+            backgroundColor={'transparent'}
+          />
           <Flex column center middle style={{flex: 1}}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </Flex>
