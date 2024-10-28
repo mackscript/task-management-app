@@ -60,7 +60,7 @@ const MainLayout = ({
               paddingHorizontal: 10,
               // backgroundColor: theme.colors.primary,
             }}>
-            <Div width={wl ? 160 : 40}>
+            <Div width={wl ? 200 : 40}>
               {back && (
                 <Touch
                   ml={10}
@@ -87,7 +87,7 @@ const MainLayout = ({
               {wl && (
                 <Div>
                   <Text
-                    size={20}
+                    size={28}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
@@ -95,8 +95,7 @@ const MainLayout = ({
                     Welcome back,
                   </Text>
                   <Text
-                    bold
-                    size={20}
+                    size={28}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',

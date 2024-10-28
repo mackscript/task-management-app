@@ -144,11 +144,11 @@ const SignInScreen = props => {
             mr={'auto'}
             mt={Platform.OS == 'ios' ? '5%' : '10%'}
             center
-            bold
             size={28}
             color={theme.colors.text.primary}>
             Welcome Back
           </Text>
+
           <Text center size={16} mt={2} color={theme.colors.text.secondary}>
             Log in to your account
           </Text>
