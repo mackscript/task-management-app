@@ -12,7 +12,12 @@ const initialState = {
   //
   signUpIsLoading: false,
   signUpStatus: null,
+  //verify
+  otpVerify: false,
+  otpVerifyIsLoading: false,
 
+  createCompanyName: '',
+  isLoadingCreateCompanyName: false,
   //checkToken
   checkTokenLoading: false,
 };
