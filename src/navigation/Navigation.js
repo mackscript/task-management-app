@@ -264,7 +264,6 @@ const Navigation = () => {
   const {isLogin} = useSelector(state => state.otp);
   const {companyDetails} = useSelector(state => state.otp);
 
-  console.log('isLogin', isLogin);
   return (
     <Stack.Navigator>
       {!isLogin && (

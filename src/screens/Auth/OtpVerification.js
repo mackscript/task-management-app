@@ -6,7 +6,12 @@ import {Dimensions, Platform, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {OtpInput} from 'react-native-otp-entry';
-import {otpVerify, setLoginData} from '../../redux/reducer/OtpVerifySlicer';
+import {
+  getCompanyDetails,
+  otpVerify,
+  setLoginData,
+  verifyLoginOtp,
+} from '../../redux/reducer/OtpVerifySlicer';
 import {useToast} from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,7 +19,7 @@ const OtpVerification = props => {
   const toast = useToast();
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
-  console.log('props', props.route.params);
+  console.log('props', props.route.params.values);
 
   const [otp, setOtp] = useState('');
 
@@ -27,43 +32,84 @@ const OtpVerification = props => {
   const autoFilleSubmit = text => {
     const newValues = {
       otp: otp,
-      email: props.route.params.email,
+      email: props.route.params.values.email,
     };
+
     console.log('email', newValues);
-    dispatch(otpVerify(newValues))
-      .unwrap()
-      .then(res => {
-        toast.hideAll();
-        AsyncStorage.setItem('token', res.data.token);
-        AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
-        AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
-        dispatch(
-          setLoginData({
-            isLogin: true,
-            userData: {
-              token: res.data.token,
-              userInfo: res.data.user,
-            },
-          }),
-        );
-        toast.show(res.status.message, {
-          type: 'success',
-          placement: 'top',
-          offset: 30,
-          animationType: 'zoom-in',
+    if (props.route.params.login) {
+      dispatch(verifyLoginOtp(newValues))
+        .unwrap()
+        .then(res => {
+          console.log('res', res);
+          toast.hideAll();
+          AsyncStorage.setItem('token', res.data.token);
+          AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
+          AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+          dispatch(
+            setLoginData({
+              isLogin: true,
+              userData: {
+                token: res.data.token,
+                userInfo: res.data.user,
+              },
+            }),
+          );
+          toast.show(res.status.message, {
+            type: 'success',
+            placement: 'top',
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+          dispatch(getCompanyDetails());
+          props.navigation.navigate('TabView');
+        })
+        .catch(err => {
+          toast.hideAll();
+          toast.show(`${err?.status?.message}`, {
+            type: 'error',
+            placement: 'top',
+            duration: 4000,
+            offset: 1000,
+            animationType: 'zoom-in',
+          });
         });
-        props.navigation.navigate('CreateCompanyName');
-      })
-      .catch(err => {
-        toast.hideAll();
-        toast.show(`${err?.status?.message}`, {
-          type: 'error',
-          placement: 'top',
-          duration: 4000,
-          offset: 1000,
-          animationType: 'zoom-in',
+    } else {
+      dispatch(otpVerify(newValues))
+        .unwrap()
+        .then(res => {
+          console.log('res', res);
+          toast.hideAll();
+          AsyncStorage.setItem('token', res.data.token);
+          AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
+          AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+          dispatch(
+            setLoginData({
+              isLogin: true,
+              userData: {
+                token: res.data.token,
+                userInfo: res.data.user,
+              },
+            }),
+          );
+          toast.show(res.status.message, {
+            type: 'success',
+            placement: 'top',
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+          props.navigation.navigate('CreateCompanyName');
+        })
+        .catch(err => {
+          toast.hideAll();
+          toast.show(`${err?.status?.message}`, {
+            type: 'error',
+            placement: 'top',
+            duration: 4000,
+            offset: 1000,
+            animationType: 'zoom-in',
+          });
         });
-      });
+    }
   };
   return (
     <MainLayout showHeader child={props} back>

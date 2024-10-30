@@ -41,7 +41,8 @@ const SignUpScreen = props => {
 
   const {theme} = useSelector(state => state.theme);
   const {signUpIsLoading} = useSelector(state => state.auth);
-
+  const {isLogin} = useSelector(state => state.otp);
+  console.log('isLogin', isLogin);
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
@@ -124,11 +125,13 @@ const SignUpScreen = props => {
           toast.show(res.status.message, {
             type: 'success',
             placement: 'top',
-
             offset: 30,
             animationType: 'zoom-in',
           });
-          props.navigation.navigate('OtpVerification', values);
+          props.navigation.navigate('OtpVerification', {
+            login: false,
+            values: formData,
+          });
         })
         .catch(err => {
           toast.hideAll();

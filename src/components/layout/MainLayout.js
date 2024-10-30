@@ -102,7 +102,7 @@ const MainLayout = ({
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
                     }}>
-                    {companyDetails.companyName}
+                    {companyDetails?.companyName}
                   </Text>
                 </Div>
               )}

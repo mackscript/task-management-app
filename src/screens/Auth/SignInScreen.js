@@ -87,19 +87,7 @@ const SignInScreen = props => {
           if (res?.status?.isSuccess) {
             console.log('res', res);
             toast.hideAll();
-            // AsyncStorage.setItem('token', res.data.token);
-            // AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user));
-            // AsyncStorage.setItem('isLogin', 'true');
-            // dispatch(
-            //   setLoginData({
-            //     isLogin: true,
-            //     userData: {
-            //       token: res.data.token,
-            //       userInfo: res.data.user,
-            //     },
-            //   }),
-            // );
-            toast.show(`You’ve successfully logged in!`, {
+            toast.show(`${res?.status?.message}`, {
               type: 'success',
               placement: 'top',
               duration: 4000,
@@ -107,7 +95,10 @@ const SignInScreen = props => {
               animationType: 'zoom-in',
             });
           }
-          // props.navigation.navigate('OtpVerification');
+          props.navigation.navigate('OtpVerification', {
+            login: true,
+            values: formData,
+          });
         })
         .catch(err => {
           toast.hideAll();

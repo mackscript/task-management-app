@@ -12,7 +12,11 @@ import {checkToken} from './src/redux/reducer/authSlicer';
 import {Div, Flex, Text} from './src/components/common/UI';
 import MainLayout from './src/components/layout/MainLayout';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {logout, setLoginData} from './src/redux/reducer/OtpVerifySlicer';
+import {
+  getCompanyDetails,
+  logout,
+  setLoginData,
+} from './src/redux/reducer/OtpVerifySlicer';
 
 const MainApp = () => {
   const dispatch = useDispatch();
@@ -26,6 +30,7 @@ const MainApp = () => {
         .unwrap()
         .then(async res => {
           console.log('res', res);
+          dispatch(getCompanyDetails());
           setTimeout(() => {
             setLoading(false);
           }, 2000);

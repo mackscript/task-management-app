@@ -11,6 +11,7 @@ const initialState = {
   //verify
   otpVerify: false,
   otpVerifyIsLoading: false,
+  // verifyWithLogin
 
   //Create Company Name
   companyDetails: '',
@@ -30,6 +31,19 @@ export const otpVerify = createAsyncThunk(
     }
   },
 );
+
+export const verifyLoginOtp = createAsyncThunk(
+  'otp/verifyLoginOtp',
+  async (values, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.post(`/users/verifyLoginOtp`, values);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
+  },
+);
+
 export const submitCreateCompany = createAsyncThunk(
   'company/create',
   async (values, {rejectWithValue}) => {
@@ -42,6 +56,17 @@ export const submitCreateCompany = createAsyncThunk(
   },
 );
 
+export const getCompanyDetails = createAsyncThunk(
+  'company/getCompanyDetails',
+  async (_, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.get(`/company/getCompanyDetails`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
+  },
+);
 const AuthSlice = createSlice({
   name: 'otp',
   initialState,
@@ -70,6 +95,18 @@ const AuthSlice = createSlice({
         state.otpVerifyIsLoading = false;
         state.otpVerify = false;
       })
+      .addCase(verifyLoginOtp.pending, state => {
+        state.otpVerifyIsLoading = true;
+        state.otpVerify = false;
+      })
+      .addCase(verifyLoginOtp.fulfilled, (state, action) => {
+        state.otpVerifyIsLoading = false;
+        state.otpVerify = true;
+      })
+      .addCase(verifyLoginOtp.rejected, (state, action) => {
+        state.otpVerifyIsLoading = false;
+        state.otpVerify = false;
+      })
       .addCase(submitCreateCompany.pending, state => {
         state.isLoadingCreateCompanyDetails = true;
         state.companyDetails = null;
@@ -79,6 +116,18 @@ const AuthSlice = createSlice({
         state.companyDetails = action.payload.data;
       })
       .addCase(submitCreateCompany.rejected, (state, action) => {
+        state.isLoadingCreateCompanyDetails = false;
+        state.companyDetails = null;
+      })
+      .addCase(getCompanyDetails.pending, state => {
+        state.isLoadingCreateCompanyDetails = true;
+        state.companyDetails = null;
+      })
+      .addCase(getCompanyDetails.fulfilled, (state, action) => {
+        state.isLoadingCreateCompanyDetails = false;
+        state.companyDetails = action.payload.data;
+      })
+      .addCase(getCompanyDetails.rejected, (state, action) => {
         state.isLoadingCreateCompanyDetails = false;
         state.companyDetails = null;
       });
