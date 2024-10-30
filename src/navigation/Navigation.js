@@ -41,18 +41,10 @@ const TabView = () => {
         tabBarStyle: {
           backgroundColor: 'transparent', // Make the tab bar background transparent
           height: 70,
-          // paddingVertical: 2,
-          // borderRadius: 50,
-          // borderWidth: 2,
-          // marginHorizontal: 10,
           position: 'absolute',
-          // bottom: 10,
           borderTopColor: '#94a3b8',
-
           borderTopWidth: 1,
           paddingHorizontal: 6,
-          // borderTopColor: 'transparent',
-          // backgroundColor: theme.colors.primary,
           elevation: 0,
           shadowOpacity: 0,
         },
@@ -269,8 +261,10 @@ const TabView = () => {
 };
 
 const Navigation = () => {
-  const {isLogin} = useSelector(state => state.auth);
+  const {isLogin} = useSelector(state => state.otp);
+  const {companyDetails} = useSelector(state => state.otp);
 
+  console.log('isLogin', isLogin);
   return (
     <Stack.Navigator>
       {!isLogin && (
@@ -287,17 +281,20 @@ const Navigation = () => {
           options={defaultOption}
         />
       )}
-
-      <Stack.Screen
-        name="OtpVerification"
-        component={OtpVerification}
-        options={defaultOption}
-      />
-      <Stack.Screen
-        name="CreateCompanyName"
-        component={CreateCompanyName}
-        options={defaultOption}
-      />
+      {!isLogin && (
+        <Stack.Screen
+          name="OtpVerification"
+          component={OtpVerification}
+          options={defaultOption}
+        />
+      )}
+      {!companyDetails && (
+        <Stack.Screen
+          name="CreateCompanyName"
+          component={CreateCompanyName}
+          options={defaultOption}
+        />
+      )}
 
       <Stack.Screen
         name="TabView"

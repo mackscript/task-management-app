@@ -38,7 +38,10 @@ const SignUpScreen = props => {
   const toast = useToast();
 
   const dispatch = useDispatch();
+
   const {theme} = useSelector(state => state.theme);
+  const {signUpIsLoading} = useSelector(state => state.auth);
+
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
@@ -107,7 +110,7 @@ const SignUpScreen = props => {
       await validationSchema.validate(formData, {abortEarly: false});
       // const values = {
       //   confirmPassword: 'Mack@123',
-      //   email: 'mack@gmail.com',
+      //   email: 'msxassc1wk22@gmail.com',
       //   firstName: 'mack',
       //   lastName: 'parker2',
       //   password: 'Mack@123',
@@ -116,31 +119,20 @@ const SignUpScreen = props => {
       dispatch(submitSignUp(formData))
         .unwrap()
         .then(res => {
+          console.log('res', res);
           toast.hideAll();
-          AsyncStorage.setItem('token', res.data.token);
-          AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
-          AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
-          dispatch(
-            setLoginData({
-              isLogin: true,
-              userData: {
-                token: res.data.token,
-                userInfo: res.data.user,
-              },
-            }),
-          );
-          toast.show(`You’ve successfully registered!`, {
+          toast.show(res.status.message, {
             type: 'success',
             placement: 'top',
-            duration: 4000,
+
             offset: 30,
             animationType: 'zoom-in',
           });
-          props.navigation.navigate('OtpVerification');
+          props.navigation.navigate('OtpVerification', values);
         })
         .catch(err => {
           toast.hideAll();
-          toast.show(`${err?.status?.errorMessage}`, {
+          toast.show(`${err?.status?.message}`, {
             type: 'error',
             placement: 'top',
             duration: 4000,
@@ -429,14 +421,25 @@ const SignUpScreen = props => {
               </Text>
             </Div>
           </Div>
-          <Button
-            onPress={() => handleSubmit()}
-            mt={30}
-            child={
-              <Text color={theme.colors.text.inverse} bold size={18}>
-                Submit
-              </Text>
-            }></Button>
+
+          {signUpIsLoading ? (
+            <Button
+              mt={30}
+              child={
+                <Text color={theme.colors.text.inverse} bold size={18}>
+                  Loading..
+                </Text>
+              }></Button>
+          ) : (
+            <Button
+              onPress={() => handleSubmit()}
+              mt={30}
+              child={
+                <Text color={theme.colors.text.inverse} bold size={18}>
+                  Submit
+                </Text>
+              }></Button>
+          )}
 
           <Flex center middle>
             <Text color={theme.colors.text.secondary} center mt={10}>

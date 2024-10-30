@@ -1,17 +1,69 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {Button, Div, Flex, Text, Touch} from '../../components/common/UI';
 import {Dimensions, Platform, StyleSheet, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {OtpInput} from 'react-native-otp-entry';
+import {otpVerify, setLoginData} from '../../redux/reducer/OtpVerifySlicer';
+import {useToast} from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OtpVerification = props => {
+  const toast = useToast();
+  const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  console.log('props', props.route.params);
+
+  const [otp, setOtp] = useState('');
 
   const handleSubmitOtpVerification = () => {
-    props.navigation.navigate('CreateCompanyName');
+    console.log('otp', otp);
+    // props.navigation.navigate('CreateCompanyName');
+    autoFilleSubmit();
+  };
+
+  const autoFilleSubmit = text => {
+    const newValues = {
+      otp: otp,
+      email: props.route.params.email,
+    };
+    console.log('email', newValues);
+    dispatch(otpVerify(newValues))
+      .unwrap()
+      .then(res => {
+        toast.hideAll();
+        AsyncStorage.setItem('token', res.data.token);
+        AsyncStorage.setItem(`userInfo`, JSON.stringify(res.data.user)); // Clear token on logout
+        AsyncStorage.setItem('isLogin', 'true'); // Update isLogin status
+        dispatch(
+          setLoginData({
+            isLogin: true,
+            userData: {
+              token: res.data.token,
+              userInfo: res.data.user,
+            },
+          }),
+        );
+        toast.show(res.status.message, {
+          type: 'success',
+          placement: 'top',
+          offset: 30,
+          animationType: 'zoom-in',
+        });
+        props.navigation.navigate('CreateCompanyName');
+      })
+      .catch(err => {
+        toast.hideAll();
+        toast.show(`${err?.status?.message}`, {
+          type: 'error',
+          placement: 'top',
+          duration: 4000,
+          offset: 1000,
+          animationType: 'zoom-in',
+        });
+      });
   };
   return (
     <MainLayout showHeader child={props} back>
@@ -40,11 +92,11 @@ const OtpVerification = props => {
           </Text>
           <Div mt={60}>
             <OtpInput
-              numberOfDigits={5}
+              numberOfDigits={6}
               focusColor="green"
               focusStickBlinkingDuration={500}
-              onTextChange={text => console.log(text)}
-              onFilled={text => console.log(`OTP is ${text}`)}
+              onTextChange={text => setOtp(text)}
+              // onFilled={text => autoFilleSubmit(text)}
               textInputProps={{
                 accessibilityLabel: 'One-Time Password',
               }}

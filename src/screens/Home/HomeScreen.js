@@ -7,6 +7,7 @@ import {ScrollView} from 'react-native';
 const HomeScreen = props => {
   const {theme} = useSelector(state => state.theme);
   const {userData} = useSelector(state => state.auth);
+
   return <MainLayout child={props} showHeader sName="" pf wl></MainLayout>;
 };
 

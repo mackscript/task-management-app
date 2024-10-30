@@ -14,9 +14,9 @@ import Notification from '../../assets/icons/notification.svg';
 
 import LinearGradient from 'react-native-linear-gradient';
 import UI, {Button, Div, Text, Touch} from '../common/UI';
-import {logout} from '../../redux/reducer/authSlicer';
 import {toggleTheme} from '../../redux/reducer/themeSlice';
 import Svg, {Path} from 'react-native-svg';
+import {logout} from '../../redux/reducer/OtpVerifySlicer';
 
 const MainLayout = ({
   children,
@@ -30,6 +30,8 @@ const MainLayout = ({
 }) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  const {companyDetails} = useSelector(state => state.otp);
+
   const backScreen = () => {
     child.navigation.goBack();
   };
@@ -92,7 +94,7 @@ const MainLayout = ({
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
                     }}>
-                    Welcome back,
+                    Welcome to,
                   </Text>
                   <Text
                     size={28}
@@ -100,7 +102,7 @@ const MainLayout = ({
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
                     }}>
-                    Ripon!
+                    {companyDetails.companyName}
                   </Text>
                 </Div>
               )}

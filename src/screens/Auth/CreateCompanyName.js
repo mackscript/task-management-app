@@ -2,14 +2,26 @@ import React, {useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import {Button, Div, Flex, Text, Touch} from '../../components/common/UI';
-import {Dimensions, Platform, StyleSheet, TextInput, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {fontScale} from '../../utils/utils';
 import * as Yup from 'yup';
 import {OtpInput} from 'react-native-otp-entry';
+import {submitCreateCompany} from '../../redux/reducer/OtpVerifySlicer';
+import {useToast} from 'react-native-toast-notifications';
 
 const CreateCompanyName = props => {
+  const toast = useToast();
+  const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  const {isLoadingCreateCompanyDetails} = useSelector(state => state.otp);
 
   const [formData, setFormData] = useState({
     companyName: '',
@@ -49,8 +61,30 @@ const CreateCompanyName = props => {
   const handleSubmitCreateCompanyName = async () => {
     try {
       await validationSchema.validate(formData, {abortEarly: false});
-      console.log('formData', formData);
-      props.navigation.navigate('TabView');
+
+      dispatch(submitCreateCompany(formData))
+        .unwrap()
+        .then(res => {
+          toast.hideAll();
+          toast.show(res.status.message, {
+            type: 'success',
+            placement: 'top',
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+          props.navigation.navigate('TabView');
+        })
+        .catch(err => {
+          toast.hideAll();
+          toast.show(`${err?.status?.message}`, {
+            type: 'error',
+            placement: 'top',
+            duration: 4000,
+            offset: 1000,
+            animationType: 'zoom-in',
+          });
+        });
+      //
     } catch (err) {
       if (err.inner) {
         const formErrors = err.inner.reduce((acc, err) => {
@@ -60,17 +94,16 @@ const CreateCompanyName = props => {
         return;
       }
     }
-    //
   };
   return (
-    <MainLayout showHeader child={props} back>
+    <MainLayout showHeader child={props}>
       <KeyboardAvoidingScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         keyboardDismissMode="none"
         style={{flex: 1}}>
         <Div style={style.container}>
-          <Text size={20} bold mt={20} color={theme.colors.text.primary}>
+          <Text size={30} bold mt={50} color={theme.colors.text.primary}>
             Create a Company Name
           </Text>
 
@@ -101,15 +134,33 @@ const CreateCompanyName = props => {
           <View
           // style={{position: 'absolute', width: '100%', bottom: '10%'}}
           >
-            <Button
-              onPress={() => handleSubmitCreateCompanyName()}
-              mt={100}
-              width={'100%'}
-              child={
-                <Text color={theme.colors.text.inverse} bold size={18}>
-                  Confirm
-                </Text>
-              }></Button>
+            {isLoadingCreateCompanyDetails ? (
+              <Button
+                mt={100}
+                width={'100%'}
+                child={
+                  <Flex middle center p={0}>
+                    <ActivityIndicator size={'small'} color={'#fff'} />
+                    <Text
+                      ml={10}
+                      color={theme.colors.text.inverse}
+                      bold
+                      size={18}>
+                      Confirm
+                    </Text>
+                  </Flex>
+                }></Button>
+            ) : (
+              <Button
+                onPress={() => handleSubmitCreateCompanyName()}
+                mt={100}
+                width={'100%'}
+                child={
+                  <Text color={theme.colors.text.inverse} bold size={18}>
+                    Confirm
+                  </Text>
+                }></Button>
+            )}
           </View>
         </Div>
       </KeyboardAvoidingScrollView>

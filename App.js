@@ -8,10 +8,11 @@ import store from './src/redux/store';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {loadTheme} from './src/redux/reducer/themeSlice';
 import {ToastProvider} from 'react-native-toast-notifications';
-import {checkToken, logout, setLoginData} from './src/redux/reducer/authSlicer';
+import {checkToken} from './src/redux/reducer/authSlicer';
 import {Div, Flex, Text} from './src/components/common/UI';
 import MainLayout from './src/components/layout/MainLayout';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logout, setLoginData} from './src/redux/reducer/OtpVerifySlicer';
 
 const MainApp = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const MainApp = () => {
       dispatch(checkToken())
         .unwrap()
         .then(async res => {
+          console.log('res', res);
           setTimeout(() => {
             setLoading(false);
           }, 2000);
@@ -45,6 +47,7 @@ const MainApp = () => {
           dispatch(logout());
         });
     } catch (error) {
+      console.log('Error checking token: error', error);
       setLoading(false);
       dispatch(logout());
     }
@@ -69,6 +72,7 @@ const MainApp = () => {
         </MainLayout>
       ) : (
         <ToastProvider
+          duration={4000}
           offsetTop={100}
           renderToast={toastOptions => (
             <Div
