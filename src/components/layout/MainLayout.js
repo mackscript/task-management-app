@@ -89,7 +89,7 @@ const MainLayout = ({
               {wl && (
                 <Div>
                   <Text
-                    size={28}
+                    size={25}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
@@ -97,12 +97,13 @@ const MainLayout = ({
                     Welcome to,
                   </Text>
                   <Text
-                    size={28}
+                    size={25}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
                     }}>
-                    {companyDetails?.companyName}
+                    {/* {companyDetails?.companyName} */}
+                    Parker ....
                   </Text>
                 </Div>
               )}
@@ -138,8 +139,8 @@ const MainLayout = ({
                     dispatch(toggleTheme());
                   }}
                   bg={theme.colors.primary}
-                  width={60}
-                  height={60}
+                  width={50}
+                  height={50}
                   br={50}
                   style={{
                     justifyContent: 'center',
@@ -147,12 +148,12 @@ const MainLayout = ({
                     // overflow: 'hidden',
                   }}>
                   <Image
-                    style={{width: 60, borderRadius: 50, height: 60}}
+                    style={{width: 50, borderRadius: 50, height: 50}}
                     source={{
                       uri: 'https://avatars.githubusercontent.com/u/68142061?v=4',
                     }}
                   />
-                  <View
+                  {/* <View
                     style={{
                       position: 'absolute',
                       zIndex: 1,
@@ -161,7 +162,7 @@ const MainLayout = ({
                       transform: [{rotate: '20deg'}],
                     }}>
                     <Notification width={25} height={25} fill={'red'} />
-                  </View>
+                  </View> */}
                 </Touch>
               )}
             </View>

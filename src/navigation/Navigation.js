@@ -39,16 +39,18 @@ const TabView = () => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: 'transparent', // Make the tab bar background transparent
-          height: 70,
+          // backgroundColor: 'transparent', // Make the tab bar background transparent
+          backgroundColor: theme.mode == 'dark' ? theme.colors.primary : '#fff',
+          height: 90,
+          paddingTop: 15,
           position: 'absolute',
-          borderTopColor: '#94a3b8',
-          borderTopWidth: 1,
+          // borderTopColor: '#94a3b8',
+          borderTopWidth: 0, //if its 0 then hide margin top
           paddingHorizontal: 6,
           elevation: 0,
           shadowOpacity: 0,
         },
-        tabBarActiveTintColor: '#60a5fa', // Active color
+        tabBarActiveTintColor: theme.mode == 'dark' ? '#fff' : '#60a5fa', // Active color
         tabBarInactiveTintColor: theme.colors.op, // /Inactive color
       }}>
       <Tab.Screen
@@ -59,6 +61,7 @@ const TabView = () => {
           tabBarIcon: ({color, size, focused}) => (
             <View
               style={{
+                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: [{scale: focused ? 1.3 : 1}],
@@ -93,6 +96,17 @@ const TabView = () => {
                   />
                 </Svg>
               </Div>
+              {focused && (
+                <View
+                  style={{
+                    marginTop: 2,
+                    width: 5,
+                    height: 5,
+                    backgroundColor:
+                      theme.mode == 'dark' ? '#fff' : theme.colors.primary,
+                    borderRadius: 50,
+                  }}></View>
+              )}
             </View>
           ),
         }}
@@ -105,6 +119,7 @@ const TabView = () => {
           tabBarIcon: ({color, focused}) => (
             <View
               style={{
+                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: [{scale: focused ? 1.3 : 1}],
@@ -133,6 +148,17 @@ const TabView = () => {
                   />
                 </Svg>
               </Div>
+              {focused && (
+                <View
+                  style={{
+                    marginTop: 2,
+                    width: 5,
+                    height: 5,
+                    backgroundColor:
+                      theme.mode == 'dark' ? '#fff' : theme.colors.primary,
+                    borderRadius: 50,
+                  }}></View>
+              )}
             </View>
           ),
         }}
@@ -145,19 +171,37 @@ const TabView = () => {
           tabBarIcon: ({color, focused}) => (
             <View
               style={{
+                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: [{scale: focused ? 1.2 : 1}],
+                transform: [{scale: focused ? 1.3 : 1.2}],
               }}>
               <Div
-                pl={20}
-                pr={24}
+                center
+                alc
+                // style={{
+                //   backgroundColor: 'red',
+                //   alignItems: 'center',
+                //   justifyContent: 'center',
+                // }}
+
+                pl={7}
+                pr={7}
                 pt={6}
                 pb={6}
-                alc
-                center
-                br={20}
-                bg={focused ? 'transparent' : 'transparent'}>
+                width={45}
+                height={45}
+                br={100}
+                bg={theme.mode == 'light' ? '#bae6fd' : '#525252'}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    backgroundColor:
+                      theme.mode == 'light' ? theme.colors.primary : '#fff',
+                    width: 37,
+                    height: 37,
+                    borderRadius: 50,
+                  }}></View>
                 <Svg
                   style={{marginLeft: 'auto', marginRight: 'auto'}}
                   width="24"
@@ -167,13 +211,24 @@ const TabView = () => {
                   xmlns="http://www.w3.org/2000/svg">
                   <Path
                     d="M5 1V5V9M9 5H1"
-                    stroke={color}
+                    stroke={theme.mode == 'light' ? '#fff' : '#000'}
                     stroke-width="1.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </Svg>
               </Div>
+              {/* {focused && (
+                <View
+                  style={{
+                    marginTop: 2,
+                    width: 5,
+                    height: 5,
+                    backgroundColor:
+                      theme.mode == 'dark' ? '#fff' : theme.colors.primary,
+                    borderRadius: 50,
+                  }}></View>
+              )} */}
             </View>
           ),
         }}
@@ -186,6 +241,7 @@ const TabView = () => {
           tabBarIcon: ({color, focused}) => (
             <View
               style={{
+                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: [{scale: focused ? 1.3 : 1}],
@@ -214,6 +270,17 @@ const TabView = () => {
                   />
                 </Svg>
               </Div>
+              {focused && (
+                <View
+                  style={{
+                    marginTop: 2,
+                    width: 5,
+                    height: 5,
+                    backgroundColor:
+                      theme.mode == 'dark' ? '#fff' : theme.colors.primary,
+                    borderRadius: 50,
+                  }}></View>
+              )}
             </View>
           ),
         }}
@@ -226,6 +293,7 @@ const TabView = () => {
           tabBarIcon: ({color, focused}) => (
             <View
               style={{
+                position: 'relative',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: [{scale: focused ? 1.3 : 1}],
@@ -252,6 +320,17 @@ const TabView = () => {
                   />
                 </Svg>
               </Div>
+              {focused && (
+                <View
+                  style={{
+                    marginTop: 2,
+                    width: 5,
+                    height: 5,
+                    backgroundColor:
+                      theme.mode == 'dark' ? '#fff' : theme.colors.primary,
+                    borderRadius: 50,
+                  }}></View>
+              )}
             </View>
           ),
         }}
