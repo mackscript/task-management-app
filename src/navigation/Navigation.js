@@ -41,9 +41,9 @@ const TabView = () => {
         tabBarStyle: {
           // backgroundColor: 'transparent', // Make the tab bar background transparent
           backgroundColor: theme.mode == 'dark' ? theme.colors.primary : '#fff',
-          height: 90,
+          height: 80,
           paddingTop: 15,
-          position: 'absolute',
+          // position: 'absolute',
           // borderTopColor: '#94a3b8',
           borderTopWidth: 0, //if its 0 then hide margin top
           paddingHorizontal: 6,

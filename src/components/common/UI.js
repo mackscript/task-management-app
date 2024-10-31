@@ -123,6 +123,7 @@ export const Div = props => {
 export const Touch = props => {
   return (
     <TouchableOpacity
+      {...props}
       onPress={props.onPress}
       style={[
         {position: 'relative'},
@@ -268,14 +269,48 @@ export const Flex = props => {
   );
 };
 
-// export const Container = props => {
-//   return (
-//     <View
-//       style={[styles.container, props.style != undefined ? props.style : null]}>
-//       {props.children}
-//     </View>
-//   );
-// };
+export const Container = props => {
+  return (
+    <View
+      style={[
+        {position: 'relative'},
+        props.bg != undefined ? {backgroundColor: props.bg} : null,
+        props.bw != undefined ? {borderWidth: props.bw} : null,
+        props.bc != undefined ? {borderColor: props.bc} : null,
+        props.br != undefined ? {borderRadius: props.br} : null,
+        props.center != undefined ? {justifyContent: center} : null,
+        props.alc != undefined ? {alignItems: center} : null,
+
+        props.ml != undefined ? {marginLeft: 'auto'} : null,
+        props.mr != undefined ? {marginRight: 'auto'} : null,
+        props.mb != undefined ? {marginBottom: props.mb} : null,
+        props.mt != undefined ? {marginTop: props.mt} : null,
+
+        props.p != undefined ? {padding: props.p} : null,
+        props.pl != undefined ? {paddingLeft: props.pl} : null,
+        props.pr != undefined ? {paddingRight: props.pr} : null,
+        props.pb != undefined ? {paddingBottom: props.pb} : null,
+        props.pt != undefined ? {paddingTop: props.pt} : null,
+
+        props.l != undefined ? {left: props.l} : null,
+        props.r != undefined ? {right: props.r} : null,
+        props.b != undefined ? {bottom: props.b} : null,
+        props.t != undefined ? {top: props.t} : null,
+
+        props.o != undefined ? {borderRadius: props.o} : null,
+
+        props.width != undefined ? {width: props.width} : {width: '95%'},
+        props.height != undefined ? {height: props.height} : null,
+
+        props.maxheight != undefined ? {maxWidth: props.maxheight} : null,
+        props.minheight != undefined ? {minHeight: props.minheight} : null,
+
+        props.style,
+      ]}>
+      {props.children}
+    </View>
+  );
+};
 export const Gradient = props => {
   return (
     <LinearGradient
@@ -309,6 +344,7 @@ const UI = {
   Flex,
   Gradient,
   GradientRed,
+  Container,
 };
 
 export default UI;

@@ -62,7 +62,7 @@ const MainLayout = ({
               paddingHorizontal: 10,
               // backgroundColor: theme.colors.primary,
             }}>
-            <Div width={wl ? 200 : 40}>
+            <Div width={'33.33%'}>
               {back && (
                 <Touch
                   ml={10}
@@ -102,16 +102,17 @@ const MainLayout = ({
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
                     }}>
-                    {/* {companyDetails?.companyName} */}
-                    Parker ....
+                    {companyDetails?.companyName}
+                    {/* Parker .... */}
                   </Text>
                 </Div>
               )}
             </Div>
-            <View>
+            <Div width={'33.33%'}>
               {sName && (
                 <Text
-                  size={20}
+                  size={25}
+                  center
                   style={{
                     color: theme.colors.text.primary,
                     textTransform: 'capitalize',
@@ -119,20 +120,38 @@ const MainLayout = ({
                   {sName}
                 </Text>
               )}
-            </View>
+            </Div>
 
-            <View>
+            <View
+              style={{
+                width: '33.33%',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+              }}>
               {more && (
                 <Touch
                   onPress={() => {
-                    dispatch(logout());
-                    setTimeout(() => {
-                      child.navigation.navigate('SignInScreen');
-                    }, 1000);
+                    // dispatch(logout());
+                    // setTimeout(() => {
+                    //   child.navigation.navigate('SignInScreen');
+                    // }, 1000);
                   }}>
-                  <UserCircleIcon width={24} height={24} fill={'#fff'} />
+                  <Svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <Path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 6.25C10 5.55964 10.5596 5 11.25 5C11.9404 5 12.5 5.55964 12.5 6.25C12.5 6.94036 11.9404 7.5 11.25 7.5C10.5596 7.5 10 6.94036 10 6.25ZM10 11.25C10 10.5596 10.5596 10 11.25 10C11.9404 10 12.5 10.5596 12.5 11.25C12.5 11.9404 11.9404 12.5 11.25 12.5C10.5596 12.5 10 11.9404 10 11.25ZM11.25 15C10.5596 15 10 15.5596 10 16.25C10 16.9404 10.5596 17.5 11.25 17.5C11.9404 17.5 12.5 16.9404 12.5 16.25C12.5 15.5596 11.9404 15 11.25 15Z"
+                      fill={theme.colors.text.primary}
+                    />
+                  </Svg>
                 </Touch>
               )}
+
               {pf && (
                 <Touch
                   onPress={() => {
