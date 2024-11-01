@@ -72,7 +72,7 @@ const MainApp = () => {
             backgroundColor={'transparent'}
           />
           <Flex column center middle style={{flex: 1}}>
-            <ActivityIndicator size="large" color={theme.colors.primary} />
+            <ActivityIndicator size="large" color={theme.colors.text.primary} />
           </Flex>
         </MainLayout>
       ) : (
