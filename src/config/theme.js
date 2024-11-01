@@ -19,7 +19,7 @@ export const lightTheme = {
       inverse: '#FFFFFF', //Text Inverse (White)
     },
     inputBorder: '#fff', //white
-    border: '#d1d5db', //#9ca3af light gray
+    border: '#a1a1aa', //#9ca3af light gray
   },
   typography: {
     fontFamily: {

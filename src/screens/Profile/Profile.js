@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {Container, Div, Flex, Text, Touch} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
-import {Image, ScrollView, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
+import ProfileModal from './ProfileModal';
 
 const Profile = props => {
   const {theme} = useSelector(state => state.theme);
   const {companyDetails} = useSelector(state => state.otp);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [type, setType] = useState('');
   return (
     <MainLayout child={props} back showHeader sName="Profile" more>
-      <Div style={{flex: 1}} >
+      <ProfileModal
+        type={type}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+      <Div style={{flex: 1}}>
         <Container ml mt={30} mr>
           <Div
             alc
@@ -60,6 +67,10 @@ const Profile = props => {
           </Div>
           <Container mt={10} width={'90%'} ml mr>
             <Touch
+              onPress={() => {
+                setModalVisible(true);
+                setType('Name');
+              }}
               mt={10}
               activeOpacity={0.6}
               bw={1}
@@ -70,6 +81,24 @@ const Profile = props => {
               <Text color={theme.colors.text.primary}>Ripon Haldar</Text>
             </Touch>
             <Touch
+              onPress={() => {
+                setModalVisible(true);
+                setType('Phone Number');
+              }}
+              mt={10}
+              activeOpacity={0.6}
+              bw={1}
+              bc={theme.colors.border}
+              br={10}
+              p={8}>
+              <Text color={theme.colors.text.secondary}>Phone Number</Text>
+              <Text color={theme.colors.text.primary}>7001186809</Text>
+            </Touch>
+            <Touch
+              onPress={() => {
+                setModalVisible(true);
+                setType('Position');
+              }}
               mt={10}
               activeOpacity={0.6}
               bw={1}
@@ -81,7 +110,12 @@ const Profile = props => {
               </Text>
               <Text color={theme.colors.text.primary}>Front-end Developer</Text>
             </Touch>
+
             <Touch
+              onPress={() => {
+                setModalVisible(true);
+                setType('Bio');
+              }}
               mt={10}
               activeOpacity={0.6}
               bw={1}
@@ -96,7 +130,7 @@ const Profile = props => {
               </Text>
             </Touch>
           </Container>
-          <Container mt={10} ml mr width="100%">
+          {/* <Container mt={10} ml mr width="100%">
             <Touch
               mt={10}
               activeOpacity={0.6}
@@ -126,7 +160,7 @@ const Profile = props => {
                 </Div>
               </Flex>
             </Touch>
-          </Container>
+          </Container> */}
         </Container>
       </Div>
     </MainLayout>
