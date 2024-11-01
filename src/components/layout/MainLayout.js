@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   SafeAreaView,
@@ -27,6 +28,7 @@ const MainLayout = ({
   sName,
   more,
   back,
+  loading,
 }) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
@@ -48,6 +50,26 @@ const MainLayout = ({
         theme.gradBG.dark,
       ]}
       style={{flex: 1}}>
+      {loading && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            justifyContent: 'center',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            left: 0,
+            zIndex: 1,
+          }}>
+          <ActivityIndicator
+            // style={{marginTop: 80}}
+            size="large"
+            color={theme.colors.text.primary}
+          />
+        </View>
+      )}
       <SafeAreaView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}

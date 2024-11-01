@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Modal,
@@ -17,6 +17,9 @@ import {fontScale} from '../../utils/utils';
 const ProfileModal = ({type, modalVisible, setModalVisible}) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
+  const {getProfileData, getProfileDataLoading} = useSelector(
+    state => state.profile,
+  );
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -25,6 +28,18 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
     bio: '',
   });
 
+  useEffect(() => {
+    setFormData({
+      firstName: getProfileData?.firstName,
+      lastName: getProfileData?.lastName,
+      phNumber: getProfileData?.phNumber,
+      position: getProfileData?.position,
+      bio: getProfileData?.bio,
+    });
+  }, [getProfileData]);
+
+  const [errors, setErrors] = useState();
+
   const handleInputChange = (name, value) => {
     const updatedFormData = {
       ...formData,
@@ -32,28 +47,84 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
     };
 
     setFormData(updatedFormData);
+    let newErrors = {...errors};
+
+    switch (name) {
+      case 'firstName':
+        newErrors.firstName = value ? '' : 'First Name is required.';
+        break;
+      case 'lastName':
+        newErrors.lastName = value ? '' : 'Last Name is required.';
+        break;
+      case 'phNumber':
+        newErrors.phNumber = value ? '' : 'Phone Number is required.';
+        break;
+      default:
+        break;
+    }
+
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key]) delete newErrors[key];
+    });
+
+    setErrors(newErrors);
   };
 
   const submit = () => {
-    if (type == 'Name') {
-      // dispatch()
-    } else if (type === 'Phone Number') {
-      // dispatch()
-    } else if (type === 'Position') {
-      // dispatch()
-    } else if (type === 'Bio') {
-      // dispatch()
-    } else {
+    const newErrors = {};
+
+    switch (type) {
+      case 'Name':
+        if (!formData.firstName) {
+          newErrors.firstName = 'First Name is required.';
+        }
+        if (!formData.lastName) {
+          newErrors.lastName = 'Last Name is required.';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+        }
+        setErrors({});
+        console.log('form', formData);
+        break;
+
+      case 'Phone Number':
+        console.log('formData', formData);
+        if (formData.phNumber.length == 0) {
+          newErrors.phNumber = 'Phone Number is required.';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+        }
+        setErrors({});
+        console.log('form', formData);
+        break;
+
+      case 'Position':
+        break;
+      case 'Bio':
+        break;
+      default:
+        setErrors();
+        // Handle any other cases
+        break;
     }
   };
+
+  console.log('errors', errors);
+
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
         setModalVisible(!modalVisible);
+        setErrors();
       }}>
       <LinearGradient
         start={{x: 0, y: 0}}
@@ -71,7 +142,11 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
             <Container width="95%" ml mr pl={6} pt={10}>
               <Flex middle spaceb>
                 <Flex middle p={0}>
-                  <Touch onPress={() => setModalVisible(!modalVisible)}>
+                  <Touch
+                    onPress={() => {
+                      setErrors();
+                      setModalVisible(!modalVisible);
+                    }}>
                     <Svg
                       width="14"
                       height="14"
@@ -137,8 +212,8 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
                         {color: theme.colors.text.primary},
                       ]}
                     />
-                    {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                   </Flex>
+                  <Text color={theme.colors.error}>{errors?.firstName}</Text>
                   <Flex
                     mt={20}
                     middle
@@ -167,6 +242,7 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
                     />
                     {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                   </Flex>
+                  <Text color={theme.colors.error}>{errors?.lastName}</Text>
                 </Div>
               ) : null}
 
@@ -215,9 +291,9 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
                     style={{elevation: 0}}>
                     <TextInput
                       focusable
-                      value={formData.PhNumber}
+                      value={formData.phNumber}
                       onChangeText={value =>
-                        handleInputChange('PhNumber', value)
+                        handleInputChange('phNumber', value)
                       }
                       placeholderTextColor={theme.colors.text.secondary}
                       placeholder="+91 *********"
@@ -226,8 +302,8 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
                         {color: theme.colors.text.primary},
                       ]}
                     />
-                    {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                   </Flex>
+                  <Text color={theme.colors.error}>{errors?.phNumber}</Text>
                 </Div>
               ) : null}
               {type == 'Bio' ? (
@@ -288,26 +364,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
   },
   inputStyle: {
     flex: 1,

@@ -312,13 +312,20 @@ export const Container = props => {
   );
 };
 export const Gradient = props => {
+  const {theme} = useSelector(state => state.theme);
+
   return (
     <LinearGradient
-      start={{x: 0, y: 0.8}}
-      locations={[0.1, 0.9]}
-      end={{x: 0.8, y: 0}}
-      colors={['red', '#fff']}
-      style={props.style}>
+      start={{x: 0, y: 0}}
+      locations={[0.3, 1, 1, 0.1]}
+      end={{x: 1, y: 0.4}}
+      colors={[
+        theme.gradBG.midDark,
+        theme.gradBG.dark,
+        theme.gradBG.midDark,
+        theme.gradBG.dark,
+      ]}
+      style={{flex: 1}}>
       {props.children}
     </LinearGradient>
   );

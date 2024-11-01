@@ -12,6 +12,8 @@ import {
 import Svg, {Path} from 'react-native-svg';
 import ProfileModal from './ProfileModal';
 import {fetchProfileData} from '../../redux/reducer/ProfileSlicer';
+import {fontScale} from '../../utils/utils';
+import ProfilePhotoModal from './ProfilePhotoModal';
 
 const Profile = props => {
   const dispatch = useDispatch();
@@ -22,6 +24,8 @@ const Profile = props => {
 
   const {companyDetails} = useSelector(state => state.otp);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
+
   const [type, setType] = useState('');
 
   useEffect(() => {
@@ -29,25 +33,22 @@ const Profile = props => {
   }, []);
 
   return (
-    <MainLayout child={props} back showHeader sName="Profile" more>
+    <MainLayout
+      loading={getProfileDataLoading}
+      child={props}
+      back
+      showHeader
+      sName="Profile"
+      more>
       <ScrollView>
-        {getProfileDataLoading && (
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              height: '100%',
-              width: '100%',
-              left: 0,
-              zIndex: 1,
-            }}>
-            <ActivityIndicator size="large" color={theme.colors.text.primary} />
-          </View>
-        )}
         <ProfileModal
           type={type}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+        />
+        <ProfilePhotoModal
+          modalVisible={modalPhotoVisible}
+          setModalVisible={setModalPhotoVisible}
         />
         <Div style={{flex: 1}}>
           <Container ml mt={30} mr>
@@ -67,6 +68,7 @@ const Profile = props => {
                 }}
               />
               <Touch
+                onPress={() => setModalPhotoVisible(true)}
                 activeOpacity={0.6}
                 style={{
                   backgroundColor: theme.mode == 'light' ? '#fff' : '#bfdbfe',
@@ -205,3 +207,26 @@ const Profile = props => {
   );
 };
 export default Profile;
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    //  backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  modalView: {
+    flex: 1,
+    marginTop: 60,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  inputStyle: {
+    flex: 1,
+    fontSize: 16 / fontScale,
+    paddingHorizontal: 6,
+  },
+});
