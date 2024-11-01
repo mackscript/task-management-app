@@ -16,6 +16,15 @@
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSCameraUsageDescription</key>
+   <string>$(PRODUCT_NAME) needs access to your Camera.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>$(PRODUCT_NAME)photos description.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>$(PRODUCT_NAME) photos add description.</string>
+
+   <key>NSMicrophoneUsageDescription</key>
+   <string>$(PRODUCT_NAME) needs access to your Microphone.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick access to Teask Management</string>
 	<key>CFBundleShortVersionString</key>

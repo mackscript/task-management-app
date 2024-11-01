@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flex: 1,
-    marginTop: 60,
+    marginTop: Platform.OS == 'android' ? 10 : 60,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

@@ -18,14 +18,15 @@ import ProfilePhotoModal from './ProfilePhotoModal';
 const Profile = props => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
-  const {getProfileData, getProfileDataLoading} = useSelector(
-    state => state.profile,
-  );
+  const {getProfileData, getProfileDataLoading, updateProfilePhotoLoading} =
+    useSelector(state => state.profile);
 
   const {companyDetails} = useSelector(state => state.otp);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
-
+  const [formData, setFormData] = useState({
+    profilePhoto: '',
+  });
   const [type, setType] = useState('');
 
   useEffect(() => {
@@ -36,9 +37,13 @@ const Profile = props => {
       focused();
     };
   }, []);
+  useEffect(() => {
+    setFormData({
+      profilePhoto: getProfileData?.profilePhoto,
+    });
+  }, [getProfileData]);
 
-  console.log('getProfileData', getProfileData);
-
+  // console.log('getProfileData?.profilePhoto', getProfileData?.profilePhoto);
   return (
     <MainLayout
       loading={getProfileDataLoading}
@@ -54,6 +59,8 @@ const Profile = props => {
           setModalVisible={setModalVisible}
         />
         <ProfilePhotoModal
+          formData={formData}
+          setFormData={setFormData}
           modalVisible={modalPhotoVisible}
           setModalVisible={setModalPhotoVisible}
         />
@@ -68,10 +75,31 @@ const Profile = props => {
               height={140}
               center
               br={100}>
+              {updateProfilePhotoLoading ? (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    borderRadius: 100,
+                    left: 0,
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    left: 0,
+                    zIndex: 1,
+                  }}>
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.colors.text.primary}
+                  />
+                </View>
+              ) : null}
+
               <Image
                 style={{width: 130, borderRadius: 100, height: 130}}
                 source={{
-                  uri: 'https://avatars.githubusercontent.com/u/68142061?v=4',
+                  uri: formData.profilePhoto,
                 }}
               />
               <Touch
