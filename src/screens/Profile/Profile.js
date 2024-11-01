@@ -29,8 +29,15 @@ const Profile = props => {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    dispatch(fetchProfileData());
+    const focused = props.navigation.addListener('focus', async () => {
+      dispatch(fetchProfileData());
+    });
+    return () => {
+      focused();
+    };
   }, []);
+
+  console.log('getProfileData', getProfileData);
 
   return (
     <MainLayout

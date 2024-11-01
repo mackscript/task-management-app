@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Modal,
   Platform,
@@ -13,13 +14,25 @@ import {useDispatch, useSelector} from 'react-redux';
 import Svg, {Path} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {fontScale} from '../../utils/utils';
+import {
+  fetchProfileData,
+  updateBio,
+  updateName,
+  updatePhNumber,
+  updatePosition,
+} from '../../redux/reducer/ProfileSlicer';
 
 const ProfileModal = ({type, modalVisible, setModalVisible}) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
-  const {getProfileData, getProfileDataLoading} = useSelector(
-    state => state.profile,
-  );
+  const {
+    getProfileData,
+    updateNameLoading,
+    updatePhoneNumberLoading,
+    updatePositionLoading,
+    updateBioLoading,
+    updateProfilePhotoLoading,
+  } = useSelector(state => state.profile);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -87,26 +100,57 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
           return;
         }
         setErrors({});
-        console.log('form', formData);
+
+        const newValues = {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        };
+        dispatch(updateName(newValues))
+          .unwrap()
+          .then(res => {
+            console.log('res', res);
+            setModalVisible(!modalVisible);
+            dispatch(fetchProfileData());
+          })
+          .catch(err => console.log('err', err));
         break;
 
       case 'Phone Number':
-        console.log('formData', formData);
         if (formData.phNumber.length == 0) {
           newErrors.phNumber = 'Phone Number is required.';
         }
-
         if (Object.keys(newErrors).length > 0) {
           setErrors(newErrors);
           return;
         }
         setErrors({});
-        console.log('form', formData);
+        dispatch(updatePhNumber({phNumber: formData.phNumber}))
+          .unwrap()
+          .then(res => {
+            setModalVisible(!modalVisible);
+            dispatch(fetchProfileData());
+          })
+          .catch(err => console.log('err', err));
+
         break;
 
       case 'Position':
+        dispatch(updatePosition({position: formData.position}))
+          .unwrap()
+          .then(res => {
+            setModalVisible(!modalVisible);
+            dispatch(fetchProfileData());
+          })
+          .catch(err => console.log('err', err));
         break;
       case 'Bio':
+        dispatch(updateBio({bio: formData.bio}))
+          .unwrap()
+          .then(res => {
+            setModalVisible(!modalVisible);
+            dispatch(fetchProfileData());
+          })
+          .catch(err => console.log('err', err));
         break;
       default:
         setErrors();
@@ -114,8 +158,6 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
         break;
     }
   };
-
-  console.log('errors', errors);
 
   return (
     <Modal
@@ -139,6 +181,28 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
         style={{flex: 1}}>
         <View style={styles.centeredView}>
           <Div width="100%" style={styles.modalView}>
+            {updateNameLoading ||
+            updatePhoneNumberLoading ||
+            updatePositionLoading ||
+            updateBioLoading ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: 'rgba(0,0,0,0.2)',
+                  left: 0,
+                  zIndex: 1,
+                }}>
+                <ActivityIndicator
+                  size="large"
+                  color={theme.colors.text.primary}
+                />
+              </View>
+            ) : null}
             <Container width="95%" ml mr pl={6} pt={10}>
               <Flex middle spaceb>
                 <Flex middle p={0}>
