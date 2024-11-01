@@ -117,7 +117,7 @@ const CreateCompanyName = props => {
               pl={10}
               pr={10}
               bg={theme.colors.secondary}
-              bc={theme.colors.border}>
+              bc={theme.colors.inputBorder}>
               <TextInput
                 placeholderTextColor={theme.colors.text.secondary}
                 placeholder="Enter Company Name"

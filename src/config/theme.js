@@ -18,7 +18,8 @@ export const lightTheme = {
       hint: '#9E9E9E', //Text Hint (Grayish):
       inverse: '#FFFFFF', //Text Inverse (White)
     },
-    border: '#fff',
+    inputBorder: '#fff', //white
+    border: '#d1d5db', //#9ca3af light gray
   },
   typography: {
     fontFamily: {

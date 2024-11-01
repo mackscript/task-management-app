@@ -19,7 +19,7 @@ const OtpVerification = props => {
   const toast = useToast();
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
-  console.log('props', props.route.params.values);
+  console.log('props', props.route.params.values.email);
 
   const [otp, setOtp] = useState('');
 
@@ -111,6 +111,24 @@ const OtpVerification = props => {
         });
     }
   };
+  // Function to mask the email
+  // Function to mask the email
+  const maskEmail = email => {
+    const [localPart, domain] = email.split('@');
+
+    if (localPart.length <= 2) {
+      return email; // Return original email if it has 2 or fewer characters
+    }
+
+    const visiblePart = localPart.slice(0, 2); // Get the first 2 letters
+    const lastChar = localPart.charAt(localPart.length - 1);
+    const lastFastChar = localPart.charAt(localPart.length - 2); // Get the last letter
+    // Get the last letter
+    const maskedPart = '*'.repeat(localPart.length - 3); // Mask the middle part
+
+    return `${visiblePart}${maskedPart}${lastFastChar}${lastChar}@${domain}`; // Combine parts
+  };
+
   return (
     <MainLayout showHeader child={props} back>
       <KeyboardAvoidingScrollView
@@ -134,7 +152,7 @@ const OtpVerification = props => {
             mt={6}
             size={18}
             color={theme.colors.text.secondary}>
-            ripon******@gmail.com
+            {maskEmail(props.route.params?.values?.email)}
           </Text>
           <Div mt={60}>
             <OtpInput

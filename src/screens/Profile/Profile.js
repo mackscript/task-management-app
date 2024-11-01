@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from '../../components/layout/MainLayout';
-import {Container, Div, Text, Touch} from '../../components/common/UI';
+import {Container, Div, Flex, Text, Touch} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
 import {Image, ScrollView, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
@@ -11,14 +11,14 @@ const Profile = props => {
 
   return (
     <MainLayout child={props} back showHeader sName="Profile" more>
-      <ScrollView style={{flex: 1}}>
+      <Div style={{flex: 1}} >
         <Container ml mt={30} mr>
           <Div
             alc
             ml="auto"
             mr={'auto'}
             width={140}
-            bg={theme.mode == 'light' ? theme.gradBG.dark : '#bfdbfe'}
+            bg={theme.mode == 'light' ? '#fff' : '#bfdbfe'}
             height={140}
             center
             br={100}>
@@ -28,9 +28,10 @@ const Profile = props => {
                 uri: 'https://avatars.githubusercontent.com/u/68142061?v=4',
               }}
             />
-            <View
+            <Touch
+              activeOpacity={0.6}
               style={{
-                backgroundColor: '#bfdbfe',
+                backgroundColor: theme.mode == 'light' ? '#fff' : '#bfdbfe',
                 position: 'absolute',
                 zIndex: 1,
                 top: 10,
@@ -55,16 +56,16 @@ const Profile = props => {
                   fill={theme.colors.primary}
                 />
               </Svg>
-            </View>
+            </Touch>
           </Div>
           <Container mt={10} width={'90%'} ml mr>
             <Touch
               mt={10}
               activeOpacity={0.6}
               bw={1}
-              bc={'gray'}
+              bc={theme.colors.border}
               br={10}
-              p={10}>
+              p={8}>
               <Text color={theme.colors.text.secondary}>Name</Text>
               <Text color={theme.colors.text.primary}>Ripon Haldar</Text>
             </Touch>
@@ -72,9 +73,9 @@ const Profile = props => {
               mt={10}
               activeOpacity={0.6}
               bw={1}
-              bc={'gray'}
+              bc={theme.colors.border}
               br={10}
-              p={10}>
+              p={8}>
               <Text color={theme.colors.text.secondary}>
                 Title at {companyDetails?.companyName}
               </Text>
@@ -84,9 +85,9 @@ const Profile = props => {
               mt={10}
               activeOpacity={0.6}
               bw={1}
-              bc={'gray'}
+              bc={theme.colors.border}
               br={10}
-              p={10}>
+              p={8}>
               <Text color={theme.colors.text.secondary}>
                 Short bio or current status
               </Text>
@@ -95,8 +96,39 @@ const Profile = props => {
               </Text>
             </Touch>
           </Container>
+          <Container mt={10} ml mr width="100%">
+            <Touch
+              mt={10}
+              activeOpacity={0.6}
+              bw={1}
+              bc={theme.colors.border}
+              br={6}>
+              <Flex middle>
+                <Div width="80%">
+                  <Text>x</Text>
+                </Div>
+                <Div width={'20%'}>
+                  <Svg
+                    style={{transform: [{rotate: '180deg'}]}}
+                    width="14"
+                    height="15"
+                    viewBox="0 0 14 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <Path
+                      d="M9 2L4.83 7L9 12"
+                      stroke="#000"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </Svg>
+                </Div>
+              </Flex>
+            </Touch>
+          </Container>
         </Container>
-      </ScrollView>
+      </Div>
     </MainLayout>
   );
 };

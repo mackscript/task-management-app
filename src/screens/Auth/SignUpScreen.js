@@ -228,7 +228,7 @@ const SignUpScreen = props => {
                   pl={10}
                   bg={theme.colors.secondary}
                   pr={10}
-                  bc={theme.colors.border}>
+                  bc={theme.colors.inputBorder}>
                   <Div>
                     <User2Icon width={23} height={22} fill={'#000'} />
                   </Div>
@@ -262,7 +262,7 @@ const SignUpScreen = props => {
                   pl={10}
                   pr={10}
                   bg={theme.colors.secondary}
-                  bc={theme.colors.border}>
+                  bc={theme.colors.inputBorder}>
                   <Div>
                     <User2Icon width={23} height={22} fill={'#000'} />
                   </Div>
@@ -298,7 +298,7 @@ const SignUpScreen = props => {
                 pl={10}
                 pr={10}
                 bg={theme.colors.secondary}
-                bc={theme.colors.border}>
+                bc={theme.colors.inputBorder}>
                 <Div>
                   <EmailIcon width={23} height={22} />
                 </Div>
@@ -328,7 +328,7 @@ const SignUpScreen = props => {
                 pl={10}
                 pr={10}
                 bg={theme.colors.secondary}
-                bc={theme.colors.border}>
+                bc={theme.colors.inputBorder}>
                 <Div>
                   <PhoneIcon width={23} height={22} />
                 </Div>
@@ -357,7 +357,7 @@ const SignUpScreen = props => {
                 pl={10}
                 pr={10}
                 bg={theme.colors.secondary}
-                bc={theme.colors.border}>
+                bc={theme.colors.inputBorder}>
                 <Div>
                   <LockIcon width={23} height={22} />
                 </Div>
@@ -394,7 +394,7 @@ const SignUpScreen = props => {
                 pl={10}
                 pr={10}
                 bg={theme.colors.secondary}
-                bc={theme.colors.border}>
+                bc={theme.colors.inputBorder}>
                 <Div>
                   <LockIcon width={23} height={22} />
                 </Div>
