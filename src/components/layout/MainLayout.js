@@ -82,6 +82,7 @@ const MainLayout = ({
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: 10,
+              paddingTop: 10,
               // backgroundColor: theme.colors.primary,
             }}>
             <Div width={'33.33%'}>
@@ -133,7 +134,7 @@ const MainLayout = ({
             <Div width={'33.33%'}>
               {sName && (
                 <Text
-                  size={25}
+                  size={30}
                   center
                   style={{
                     color: theme.colors.text.primary,

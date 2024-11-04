@@ -29,7 +29,6 @@ const MainApp = () => {
       dispatch(checkToken())
         .unwrap()
         .then(async res => {
-          console.log('res', res);
           dispatch(getCompanyDetails());
           setTimeout(() => {
             setLoading(false);

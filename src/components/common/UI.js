@@ -320,12 +320,12 @@ export const Gradient = props => {
       locations={[0.3, 1, 1, 0.1]}
       end={{x: 1, y: 0.4}}
       colors={[
-        theme.gradBG.midDark,
         theme.gradBG.dark,
         theme.gradBG.midDark,
         theme.gradBG.dark,
+        theme.gradBG.midDark,
       ]}
-      style={{flex: 1}}>
+      style={[{flex: 1}, {...props.style}]}>
       {props.children}
     </LinearGradient>
   );

@@ -21,7 +21,7 @@ import {height} from '../utils/utils';
 import MoreScreen from '../screens/more/MoreScreen';
 import CreateTask from '../screens/task/CreateTask';
 import Svg, {Path} from 'react-native-svg';
-import Task from '../screens/task/Task';
+import AllTask from '../screens/task/AllTask';
 import CreateCompanyName from '../screens/Auth/CreateCompanyName';
 
 const Stack = createNativeStackNavigator();
@@ -115,8 +115,8 @@ const TabView = () => {
         }}
       />
       <Tab.Screen
-        name="Task"
-        component={Task}
+        name="AllTask"
+        component={AllTask}
         options={{
           headerShown: false,
           tabBarIcon: ({color, focused}) => (

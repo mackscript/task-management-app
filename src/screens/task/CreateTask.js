@@ -1,13 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {Div, Text} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
 import {ScrollView} from 'react-native';
+import AddEditTask from './AddEditTask';
 
 const CreateTask = props => {
   const {theme} = useSelector(state => state.theme);
   const {userData} = useSelector(state => state.auth);
-  return <MainLayout child={props} showHeader sName="" pf wl></MainLayout>;
+
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const focused = props.navigation.addListener('focus', async () => {
+      setShowModal(true);
+    });
+    return () => {
+      focused();
+    };
+  }, []);
+  return (
+    <MainLayout child={props} showHeader sName={'Create Task'}>
+      <AddEditTask showModal={showModal} setShowModal={setShowModal} />
+    </MainLayout>
+  );
 };
 
 export default CreateTask;
