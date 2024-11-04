@@ -215,11 +215,11 @@ const SignInScreen = props => {
                 />
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
-              <Text color={theme.colors.error} mt={4} size={12}>
+              <Text color={theme.colors.error} mt={0} size={12}>
                 {errors.email && errors.email}
               </Text>
             </Div>
-            <Div mt={10}>
+            <Div mt={4}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -278,7 +278,7 @@ const SignInScreen = props => {
               mt={'5%'}
               child={
                 <Text color={theme.colors.text.inverse} bold size={18}>
-                  Submit
+                  Sign In
                 </Text>
               }></Button>
           )}

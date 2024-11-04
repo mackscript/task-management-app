@@ -43,10 +43,11 @@ const ProfilePhotoModal = ({
       width: 300,
       height: 400,
       cropping: true,
+      includeBase64: true,
     })
       .then(image => {
         setModalVisible(false);
-        dispatch(updateProfilePhoto({profilePhoto: image.path}))
+        dispatch(updateProfilePhoto({profilePhoto: image.data}))
           .unwrap()
           .then(res => {
             dispatch(fetchProfileData());
@@ -63,10 +64,11 @@ const ProfilePhotoModal = ({
       width: 300,
       height: 400,
       cropping: true,
+      includeBase64: true,
     })
       .then(image => {
         setModalVisible(false);
-        dispatch(updateProfilePhoto({profilePhoto: image.path}))
+        dispatch(updateProfilePhoto({profilePhoto: image.data}))
           .unwrap()
           .then(res => {
             dispatch(fetchProfileData());

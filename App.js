@@ -57,6 +57,7 @@ const MainApp = () => {
       dispatch(logout());
     }
   };
+
   useEffect(() => {
     handleTokenCheck();
     dispatch(loadTheme()); // Load theme here

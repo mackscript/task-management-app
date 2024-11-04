@@ -248,7 +248,7 @@ const SignUpScreen = props => {
                   {/* <Div><AppleIcon width={23} height={22} /></Div> */}
                 </Flex>
 
-                <Text color={theme.colors.error} mt={4} size={12}>
+                <Text color={theme.colors.error} mt={0} size={12}>
                   {errors.firstName && errors.firstName}
                 </Text>
               </Div>
@@ -282,13 +282,13 @@ const SignUpScreen = props => {
                 </Div> */}
                 </Flex>
 
-                <Text color={theme.colors.error} mt={4} size={12}>
+                <Text color={theme.colors.error} mt={0} size={12}>
                   {errors.lastName && errors.lastName}
                 </Text>
               </Div>
             </Flex>
 
-            <Div mt={8}>
+            <Div mt={4}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -314,11 +314,11 @@ const SignUpScreen = props => {
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
 
-              <Text color={theme.colors.error} mt={4} size={12}>
+              <Text color={theme.colors.error} mt={0} size={12}>
                 {errors.email && errors.email}
               </Text>
             </Div>
-            <Div mt={8}>
+            <Div mt={4}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -343,11 +343,11 @@ const SignUpScreen = props => {
                 <Div>{/* <AppleIcon width={23} height={22} /> */}</Div>
               </Flex>
 
-              <Text color={theme.colors.error} mt={4} size={12}>
+              <Text color={theme.colors.error} mt={0} size={12}>
                 {errors.phNumber && errors.phNumber}
               </Text>
             </Div>
-            <Div mt={8}>
+            <Div mt={4}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -380,11 +380,11 @@ const SignUpScreen = props => {
                 </TouchableOpacity>
               </Flex>
 
-              <Text color={theme.colors.error} mt={4} size={12}>
+              <Text color={theme.colors.error} mt={0} size={12}>
                 {errors.password && errors.password}
               </Text>
             </Div>
-            <Div mt={8}>
+            <Div mt={4}>
               <Flex
                 middle
                 p={Platform.OS == 'ios' ? 10 : 0}
@@ -439,7 +439,7 @@ const SignUpScreen = props => {
               mt={30}
               child={
                 <Text color={theme.colors.text.inverse} bold size={18}>
-                  Submit
+                  Sign In
                 </Text>
               }></Button>
           )}

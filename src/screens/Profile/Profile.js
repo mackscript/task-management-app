@@ -99,7 +99,7 @@ const Profile = props => {
               <Image
                 style={{width: 130, borderRadius: 100, height: 130}}
                 source={{
-                  uri: formData.profilePhoto,
+                  uri: `data:image/jpeg;base64,${formData.profilePhoto}`,
                 }}
               />
               <Touch

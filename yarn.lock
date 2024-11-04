@@ -8593,6 +8593,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-network-info@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "react-native-network-info@npm:5.2.1"
+  peerDependencies:
+    react-native: ">=0.47"
+  checksum: eb5ff3f19777f278c95cbc80c22ae6b8703d145ce463e51fd7f09e51da3e2f20b27048432b24ad1671f8a1b01b2c939a4d9097e8c4b13ae182230e1bb848242d
+  languageName: node
+  linkType: hard
+
 "react-native-otp-entry@npm:^1.7.3":
   version: 1.7.3
   resolution: "react-native-otp-entry@npm:1.7.3"
@@ -9891,6 +9900,7 @@ __metadata:
     react-native-keyboard-avoiding-scroll-view: ^1.0.1
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-linear-gradient: ^2.8.3
+    react-native-network-info: ^5.2.1
     react-native-otp-entry: ^1.7.3
     react-native-safe-area-context: ^4.11.0
     react-native-screens: ^3.34.0
