@@ -3,6 +3,7 @@
 export const lightTheme = {
   mode: 'light',
   colors: {
+    default: '#bfdbfe',
     primary: '#60a5fa', // Primary (Blue): #60a5fa – A soft medium blue.
     secondary: '#f0f9ff', //Secondary (Sky White Blue): #f0f9ff –
     background: '#FFFFFF', //Background (White): #FFFFFF
@@ -50,6 +51,7 @@ export const lightTheme = {
 export const darkTheme = {
   mode: 'dark',
   colors: {
+    default: '#bfdbfe',
     primary: '#030303', // dark
     secondary: '#242424',
     background: '#121212',
