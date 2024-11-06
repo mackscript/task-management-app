@@ -321,9 +321,9 @@ export const Gradient = props => {
       end={{x: 1, y: 0.4}}
       colors={[
         theme.gradBG.dark,
-        theme.gradBG.midDark,
         theme.gradBG.dark,
-        theme.gradBG.midDark,
+        theme.gradBG.dark,
+        theme.gradBG.dark,
       ]}
       style={[{flex: 1}, {...props.style}]}>
       {props.children}

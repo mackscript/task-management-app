@@ -396,7 +396,11 @@ const ProfileModal = ({type, modalVisible, setModalVisible}) => {
                       placeholder="Short bio or current status"
                       style={[
                         styles.inputStyle,
-                        {MaxHeight: '100%', minHeight: 90},
+                        {
+                          maxHeight: '100%',
+                          minHeight: 90,
+                          textAlignVertical: 'top',
+                        },
                         {color: theme.colors.text.primary},
                       ]}
                     />

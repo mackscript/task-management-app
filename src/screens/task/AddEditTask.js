@@ -1,20 +1,61 @@
 import React, {useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
-import {Div, Flex, Gradient, Text, Touch} from '../../components/common/UI';
+import {
+  Container,
+  Div,
+  Flex,
+  Gradient,
+  Text,
+  Touch,
+} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
-import {Modal, ScrollView, StyleSheet} from 'react-native';
+import {Modal, Platform, ScrollView, StyleSheet, TextInput} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Svg, {Path} from 'react-native-svg';
+import {fontScale} from '../../utils/utils';
+import CalenderPickers from '../../components/common/calender/CalenderPickers';
+import moment from 'moment';
 
-const AddEditTask = ({showModal, setShowModal}) => {
+const AddEditTask = ({showModal, setShowModal, title}) => {
   const navigates = useNavigation();
-  useSelector(state => state.theme);
+  const {theme} = useSelector(state => state.theme);
   const {userData} = useSelector(state => state.auth);
+  // state
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(null);
+
+  const onDateChange = (date, type) => {
+    // if (type === 'END_DATE') {
+    //   setEndDate(date);
+    // } else {
+    setStartDate(date);
+    //   setEndDate(null);
+    // }
+  };
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    priority: '',
+    image: '',
+    dueDate: '',
+    assignTo: '',
+  });
+  // Calendar
+
+  //search people
+
+  //onChange
+
+  //  submit
+
+  //close
   const closeModalBack = () => {
     setShowModal(!showModal);
-    navigates.navigate('AllTask');
+    navigates.navigate('HomeScreen');
   };
+
   return (
     <Modal
       animationType="slide"
@@ -26,24 +67,130 @@ const AddEditTask = ({showModal, setShowModal}) => {
       <Div style={styles.centeredView}>
         <Div style={styles.modalView}>
           <Gradient style={{borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
-            <Touch ml="auto" mr={20} mt={10} onPress={() => closeModalBack()}>
-              <Svg
-                width="20"
-                height="20"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <Path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M0.292893 0.292893C0.683417 -0.0976311 1.31658 -0.0976311 1.70711 0.292893L7 5.58579L12.2929 0.292893C12.6834 -0.0976311 13.3166 -0.0976311 13.7071 0.292893C14.0976 0.683417 14.0976 1.31658 13.7071 1.70711L8.41421 7L13.7071 12.2929C14.0976 12.6834 14.0976 13.3166 13.7071 13.7071C13.3166 14.0976 12.6834 14.0976 12.2929 13.7071L7 8.41421L1.70711 13.7071C1.31658 14.0976 0.683417 14.0976 0.292893 13.7071C-0.0976311 13.3166 -0.0976311 12.6834 0.292893 12.2929L5.58579 7L0.292893 1.70711C-0.0976311 1.31658 -0.0976311 0.683417 0.292893 0.292893Z"
-                  fill="#0F1729"
-                />
-              </Svg>
-            </Touch>
+            <Flex p={15} middle spaceb>
+              <Touch width="45%" p={6} mt={5} onPress={() => closeModalBack()}>
+                <Svg
+                  width="30"
+                  height="40"
+                  viewBox="0 0 17 9"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <Path
+                    d="M5.91667 8L0.75 4.5M0.75 4.5L5.91667 1M0.75 4.5L16.25 4.5"
+                    stroke={theme.colors.text.primary}
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </Svg>
+              </Touch>
+              <Text width="60%" size={18} color={theme.colors.text.primary}>
+                {title}
+              </Text>
+            </Flex>
+            {/* // inputs / */}
+            <Container width={'90%'} ml mr>
+              <Div>
+                <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  Title
+                </Text>
+                <Flex
+                  middle
+                  p={Platform.OS == 'ios' ? 10 : 0}
+                  bw={1}
+                  br={10}
+                  pl={10}
+                  pr={10}
+                  bg={theme.colors.inputBack}
+                  bc={theme.colors.inputBorder}
+                  style={{elevation: 0}}>
+                  <TextInput
+                    focusable
+                    // value={formData.phNumber}
+                    // onChangeText={value => handleInputChange('phNumber', value)}
+                    placeholderTextColor={theme.colors.text.secondary}
+                    placeholder="Interview tomorrow..."
+                    style={[
+                      styles.inputStyle,
+                      {color: theme.colors.text.primary},
+                    ]}
+                  />
+                </Flex>
+                {/* <Text color={theme.colors.error}>{errors?.phNumber}</Text> */}
+              </Div>
+              <Div mt={15}>
+                <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  Description
+                </Text>
+                <Flex
+                  middle
+                  p={Platform.OS == 'ios' ? 10 : 0}
+                  bw={1}
+                  br={10}
+                  pl={10}
+                  pr={10}
+                  bg={theme.colors.inputBack}
+                  bc={theme.colors.inputBorder}
+                  style={{
+                    elevation: 0,
+                  }}>
+                  <TextInput
+                    multiline
+                    numberOfLines={5}
+                    // value={formData.phNumber}
+                    // onChangeText={value => handleInputChange('phNumber', value)}
+                    placeholderTextColor={theme.colors.text.secondary}
+                    placeholder="Enter task description"
+                    style={[
+                      styles.inputStyle,
+                      {
+                        textAlignVertical: 'top',
+                      },
+                      {color: theme.colors.text.primary},
+                    ]}
+                  />
+                </Flex>
+
+                {/* <Text color={theme.colors.error}>{errors?.phNumber}</Text> */}
+              </Div>
+              <Div mt={15}>
+                <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  Due Date
+                </Text>
+                <Touch onPress={() => setIsDatePickerVisible(true)}>
+                  <Flex
+                    middle
+                    p={15}
+                    bw={1}
+                    br={10}
+                    pl={10}
+                    pr={10}
+                    bg={theme.colors.inputBack}
+                    bc={theme.colors.inputBorder}
+                    style={{
+                      elevation: 0,
+                    }}>
+                    <Text size={18} color={theme.colors.text.primary}>
+                      {moment(startDate).format('DD/MM/YYYY')}
+                    </Text>
+                  </Flex>
+                </Touch>
+                {/* <Text color={theme.colors.error}>{errors?.phNumber}</Text> */}
+              </Div>
+            </Container>
           </Gradient>
         </Div>
       </Div>
+      <CalenderPickers
+        range={false}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        // setEndDate={setEndDate}
+        // endDate={endDate}
+        onDateChange={onDateChange}
+        isDatePickerVisible={isDatePickerVisible}
+        setIsDatePickerVisible={setIsDatePickerVisible}
+      />
     </Modal>
   );
 };
@@ -51,10 +198,15 @@ const AddEditTask = ({showModal, setShowModal}) => {
 export default AddEditTask;
 const styles = StyleSheet.create({
   centeredView: {
-    marginTop: '15%',
+    marginTop: '10%',
     flex: 1,
     width: '100%',
     elevation: 10,
+  },
+  inputStyle: {
+    flex: 1,
+    fontSize: 16 / fontScale,
+    paddingHorizontal: 6,
   },
   modalView: {
     width: '100%',

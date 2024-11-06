@@ -20,8 +20,12 @@ const CreateTask = props => {
     };
   }, []);
   return (
-    <MainLayout child={props} showHeader sName={'Create Task'}>
-      <AddEditTask showModal={showModal} setShowModal={setShowModal} />
+    <MainLayout child={props} sName={'Create Task'}>
+      <AddEditTask
+        title="New Task"
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
     </MainLayout>
   );
 };

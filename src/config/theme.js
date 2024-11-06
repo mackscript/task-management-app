@@ -18,6 +18,7 @@ export const lightTheme = {
       hint: '#9E9E9E', //Text Hint (Grayish):
       inverse: '#FFFFFF', //Text Inverse (White)
     },
+    inputBack: '#eff6ff',
     inputBorder: '#fff', //white
     border: '#a1a1aa', //#9ca3af light gray
   },
@@ -36,8 +37,6 @@ export const lightTheme = {
   gradBG: {
     dark: '#bfdbfe',
     midDark: '#eff6ff',
-    midLight: '#242424',
-    light: '#3d3d3d',
   },
   spacing: {
     tiny: 4,
@@ -66,6 +65,8 @@ export const darkTheme = {
       hint: '#A0A0A0',
       inverse: '#FFFFFF',
     },
+    inputBorder: '#3f3f46', //white
+    inputBack: '#262626',
     border: '#44403c',
   },
   typography: {
@@ -83,8 +84,6 @@ export const darkTheme = {
   gradBG: {
     dark: '#171717',
     midDark: '#242424',
-    midLight: '#242424',
-    light: '#3d3d3d',
   },
   spacing: {
     tiny: 4,
