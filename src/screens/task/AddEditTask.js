@@ -36,14 +36,14 @@ import {MultiSelect} from 'react-native-element-dropdown';
 import * as Yup from 'yup';
 
 const data = [
-  {label: 'Item 1', value: '1'},
-  {label: 'Item 2', value: '2'},
-  {label: 'Item 3', value: '3'},
-  {label: 'Item 4', value: '4'},
-  {label: 'Item 5', value: '5'},
-  {label: 'Item 6', value: '6'},
-  {label: 'Item 7', value: '7'},
-  {label: 'Item 8', value: '8'},
+  {label: 'Ripon haldar ', value: 1},
+  {label: 'Nima darji Lama ', value: 2},
+  {label: 'Arnab nandi', value: 3},
+  {label: 'Nitesh Kejriwal', value: 4},
+  {label: 'shornali chatarjeee', value: 5},
+  {label: 'abhisekh gupta', value: 6},
+  {label: 'Ritesh Kumar Haldar', value: 7},
+  {label: 'Arnab das', value: 8},
 ];
 
 const AddEditTask = ({showModal, setShowModal, title}) => {
@@ -271,16 +271,12 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                         <Touch
                           mt={10}
                           mr={8}
-                          br={6}
+                          br={20}
+                          pl={2}
+                          pr={2}
                           bw={1}
                           onPress={() => unSelect && unSelect(item)}>
-                          <Flex
-                            pl={5}
-                            pr={10}
-                            pt={2}
-                            pb={2}
-                            middle
-                            style={{margin: 4}}>
+                          <Flex pl={5} pr={10} pt={2} pb={2} middle>
                             <Image
                               style={{
                                 width: 30,
@@ -295,6 +291,8 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                             <Text
                               color={theme.colors.text.primary}
                               mr={8}
+                              cp
+                              size={14}
                               style={{}}>
                               {item.label}
                             </Text>

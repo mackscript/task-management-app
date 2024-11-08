@@ -191,6 +191,7 @@ export const Text = props => {
         props.s != undefined ? {letterSpacing: props.s} : null,
         props.width != undefined ? {width: props.width} : null,
         props.upper != undefined ? {textTransform: 'uppercase'} : null,
+        props.cp != undefined ? {textTransform: 'capitalize'} : null,
         props.bold != undefined ? {fontWeight: 'bold'} : null,
         {position: 'relative'},
         props.l != undefined ? {left: props.l} : null,
