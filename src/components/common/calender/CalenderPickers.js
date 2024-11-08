@@ -29,6 +29,16 @@ const CalenderPickers = ({
   const disablePastDates = date => {
     return moment(date).isBefore(moment(), 'day'); // Returns true for past dates
   };
+
+  // // Calendar
+  // const onDateChange = (date, type) => {
+  //   // if (type === 'END_DATE') {
+  //   //   setEndDate(date);
+  //   // } else {
+  //   setStartDate(date);
+  //   //   setEndDate(null);
+  //   // }
+  // };
   return (
     <Modal
       animationType="slide"

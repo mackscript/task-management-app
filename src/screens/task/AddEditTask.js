@@ -1,6 +1,7 @@
 import React, {useRef, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {
+  Button,
   Container,
   Div,
   Flex,
@@ -32,6 +33,7 @@ const priorityList = ['Low', 'Medium', 'High'];
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import {Dropdown} from 'react-native-element-dropdown';
 import {MultiSelect} from 'react-native-element-dropdown';
+import * as Yup from 'yup';
 
 const data = [
   {label: 'Item 1', value: '1'},
@@ -56,31 +58,36 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const [startDate, setStartDate] = useState(new Date());
-  const [priority, setPriority] = useState('Low');
 
   const [images, setImages] = useState([]);
   const [showModalUploadImg, setShowModalUploadImg] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+
   const [formData, setFormData] = useState({
+    assignTo: [],
     title: '',
     description: '',
-    priority: '',
-    image: '',
-    dueDate: '',
-    assignTo: '',
+    priority: 'Low',
+    image: [],
   });
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState([]);
+
+  const [errors, setErrors] = useState({});
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .min(8, 'Task title is too short.')
+      .max(150, 'Task title is too long.')
+      .required('Task title is required.'),
+    assignTo: Yup.array()
+      .min(1, 'At least one assignee is required.')
+      .required('AssignTo field is required.'),
+    description: Yup.string(),
+    image: Yup.array(),
+    priority: Yup.string(),
+  });
 
   // Calendar
   const onDateChange = (date, type) => {
-    // if (type === 'END_DATE') {
-    //   setEndDate(date);
-    // } else {
     setStartDate(date);
-    //   setEndDate(null);
-    // }
   };
 
   //upload images
@@ -90,6 +97,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   const handelUploadImg = img => {
     setImages([...images, img]);
   };
+
   const removeImg = index => {
     setImages(images.filter((_, i) => i !== index));
   };
@@ -97,7 +105,44 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
 
   //onChange
 
+  const handleInputChange = (name, value) => {
+    const updatedFormData = {
+      ...formData,
+      [name]: value,
+    };
+    setFormData(updatedFormData);
+
+    validationSchema
+      .validate(updatedFormData, {abortEarly: false})
+      .then(() => {
+        setErrors({});
+      })
+      .catch(err => {
+        const newErrors = {};
+        err.inner.forEach(error => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
+  };
+
   //  submit
+  const submitBtn = async () => {
+    try {
+      await validationSchema.validate(formData, {abortEarly: false});
+
+      console.log('formData', formData);
+      //
+    } catch (error) {
+      if (error.inner) {
+        const formErrors = error.inner.reduce((acc, err) => {
+          return {...acc, [err.path]: err.message};
+        }, {});
+        setErrors(formErrors);
+        return;
+      }
+    }
+  };
 
   //close
   const closeModalBack = () => {
@@ -106,7 +151,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   };
 
   const animateBackground = selectedPriority => {
-    setPriority(selectedPriority);
+    setFormData({...formData, priority: selectedPriority});
 
     const index = priorityList.indexOf(selectedPriority);
 
@@ -118,14 +163,14 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   };
 
   const renderItem = (item, focusX) => {
-    console.log('f,c,d', focusX);
     return (
       <Div mb={2} pl={10} pt={15} pb={15} bg={focusX ? '#bfdbfe' : '#eff6ff'}>
         <Text style={styles.selectedTextStyle}>{item.label}</Text>
       </Div>
     );
   };
-  console.log('images.length', images.length);
+  console.log('errors', errors);
+  console.log('formData', formData);
   return (
     <Modal
       animationType="slide"
@@ -201,12 +246,26 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       selectedStyle={styles.selectedStyle}
                       placeholder={!isFocus ? 'Select User' : '...'}
                       searchPlaceholder="Search..."
-                      value={selected}
+                      value={formData.assignTo}
                       renderItem={renderItem}
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                        setSelected(item);
+                        const newFormData = {...formData, assignTo: [...item]};
+                        setFormData(newFormData);
+
+                        validationSchema
+                          .validate(newFormData, {abortEarly: false})
+                          .then(() => {
+                            setErrors({});
+                          })
+                          .catch(err => {
+                            const newErrors = {};
+                            err.inner.forEach(error => {
+                              newErrors[error.path] = error.message;
+                            });
+                            setErrors(newErrors);
+                          });
                       }}
                       renderSelectedItem={(item, unSelect) => (
                         <Touch
@@ -272,6 +331,9 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       )}
                     />
                   </Flex>
+                  <Text color={theme.colors.error} mt={0} size={14}>
+                    {errors.assignTo && errors.assignTo}
+                  </Text>
                   {/* <Flex wrap>
                     {users.map((el, index) => (
                       <Div ml={10} key={index}>
@@ -298,8 +360,8 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     style={{elevation: 0}}>
                     <TextInput
                       focusable
-                      // value={formData.phNumber}
-                      // onChangeText={value => handleInputChange('phNumber', value)}
+                      value={formData.title}
+                      onChangeText={value => handleInputChange('title', value)}
                       placeholderTextColor={theme.colors.text.secondary}
                       placeholder="Interview tomorrow..."
                       style={[
@@ -308,7 +370,10 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       ]}
                     />
                   </Flex>
-                  {/* <Text color={theme.colors.error}>{errors?.phNumber}</Text> */}
+
+                  <Text color={theme.colors.error} mt={0} size={14}>
+                    {errors.title && errors.title}
+                  </Text>
                 </Div>
                 <Div mt={15}>
                   <Text size={18} mb={6} color={theme.colors.text.secondary}>
@@ -412,7 +477,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                           size={16}
                           bold
                           color={
-                            el === priority
+                            el === formData.priority
                               ? theme.colors.primary
                               : theme.colors.text.primary
                           }
@@ -498,6 +563,15 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     </Flex>
                   </ScrollView>
                 </Div>
+                <Button
+                  mb={20}
+                  onPress={() => submitBtn()}
+                  mt={'2%'}
+                  child={
+                    <Text color={theme.colors.text.inverse} bold size={18}>
+                      Create Task
+                    </Text>
+                  }></Button>
               </Container>
             </ScrollView>
           </Gradient>
@@ -526,7 +600,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
 export default AddEditTask;
 const styles = StyleSheet.create({
   centeredView: {
-    marginTop: '10%',
+    marginTop: '5%',
     flex: 1,
     width: '100%',
     elevation: 10,
