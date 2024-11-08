@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {
   Button,
@@ -9,7 +9,7 @@ import {
   Text,
   Touch,
 } from '../../components/common/UI';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Animated,
   Modal,
@@ -29,25 +29,23 @@ import CalenderPickers from '../../components/common/calender/CalenderPickers';
 import moment from 'moment';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import UploadImages from '../../components/common/UploadImges';
-const priorityList = ['Low', 'Medium', 'High'];
+const priorityList = ['low', 'medium', 'high'];
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import {Dropdown} from 'react-native-element-dropdown';
 import {MultiSelect} from 'react-native-element-dropdown';
 import * as Yup from 'yup';
-
-const data = [
-  {label: 'Ripon haldar ', value: 1},
-  {label: 'Nima darji Lama ', value: 2},
-  {label: 'Arnab nandi', value: 3},
-  {label: 'Nitesh Kejriwal', value: 4},
-  {label: 'shornali chatarjeee', value: 5},
-  {label: 'abhisekh gupta', value: 6},
-  {label: 'Ritesh Kumar Haldar', value: 7},
-  {label: 'Arnab das', value: 8},
-];
+import {getAllUsers, getUserBySearch} from '../../redux/reducer/UserSlicer';
+import {submitTask} from '../../redux/reducer/TaskSlicer';
+import {useToast} from 'react-native-toast-notifications';
 
 const AddEditTask = ({showModal, setShowModal, title}) => {
+  const toast = useToast();
   const navigates = useNavigation();
+  const dispatch = useDispatch();
+
+  const {getUserLoading, getUsers} = useSelector(state => state.users);
+  // const {isLoadingTaskCreate} = useSelector(state => state.task);
+  let isLoadingTaskCreate = false;
   const animatedValue = useRef(new Animated.Value(0)).current;
   const buttonWidth = Dimensions.get('window').width * 0.3; // Assuming each button is 30% of screen width
 
@@ -55,6 +53,8 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   const {userData} = useSelector(state => state.auth);
 
   // state
+  const [loading, setLoading] = useState(false);
+  const [usersData, setUsersData] = useState([]);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const [startDate, setStartDate] = useState(new Date());
@@ -67,7 +67,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
     assignTo: [],
     title: '',
     description: '',
-    priority: 'Low',
+    priority: 'low',
     image: [],
   });
 
@@ -105,11 +105,33 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
 
   //onChange
 
+  useEffect(() => {
+    if (getUsers?.result > 0) {
+      let options = getUsers?.data?.map(el => {
+        return {
+          value: el?._id,
+          label: `${el?.firstName} ${el?.lastName}`,
+          profile: el?.image,
+        };
+      });
+      setUsersData(options);
+    }
+  }, [getUsers]);
+
+  // const handelSearchUser = text => {
+  //   console.log('text', text);
+  //   if (text.length >= 2) {
+
+  //   } else {
+  //     setUsersData([]);
+  //   }
+  // };
   const handleInputChange = (name, value) => {
     const updatedFormData = {
       ...formData,
       [name]: value,
     };
+
     setFormData(updatedFormData);
 
     validationSchema
@@ -125,13 +147,66 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
         setErrors(newErrors);
       });
   };
+  const animateBackground = selectedPriority => {
+    setFormData({...formData, priority: selectedPriority});
+    const index = priorityList.indexOf(selectedPriority);
 
+    Animated.timing(animatedValue, {
+      toValue: index * buttonWidth,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
   //  submit
   const submitBtn = async () => {
     try {
       await validationSchema.validate(formData, {abortEarly: false});
+      setLoading(true);
+      const newValues = {
+        title: formData.title,
+        description: formData.description,
+        priority: formData.priority,
+        image: images,
+        dueDate: startDate, // Deadline date in ISO format
+        assignTo: [...formData.assignTo], // Replace with actual user IDs
+      };
 
-      console.log('formData', formData);
+      dispatch(submitTask(newValues))
+        .unwrap()
+        .then(res => {
+          console.log('res', res?.status?.message);
+          toast.show(`Task Create successfully!`, {
+            type: 'success',
+            placement: 'top',
+            duration: 4000,
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+
+          setFormData({
+            assignTo: [],
+            title: '',
+            description: '',
+            priority: 'low',
+            image: [],
+          });
+          setStartDate(new Date());
+          animateBackground('low');
+          setLoading(false);
+          closeModalBack();
+          setImages([]);
+        })
+        .catch(err => {
+          setLoading(false);
+          toast.show(`${res?.status?.message}`, {
+            type: 'error',
+            placement: 'top',
+            duration: 4000,
+            offset: 30,
+            animationType: 'zoom-in',
+          });
+        });
+
       //
     } catch (error) {
       if (error.inner) {
@@ -148,29 +223,31 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
   const closeModalBack = () => {
     setShowModal(!showModal);
     navigates.navigate('HomeScreen');
-  };
-
-  const animateBackground = selectedPriority => {
-    setFormData({...formData, priority: selectedPriority});
-
-    const index = priorityList.indexOf(selectedPriority);
-
-    Animated.timing(animatedValue, {
-      toValue: index * buttonWidth,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    setFormData({
+      assignTo: [],
+      title: '',
+      description: '',
+      priority: 'low',
+      image: [],
+    });
+    setStartDate(new Date());
   };
 
   const renderItem = (item, focusX) => {
     return (
-      <Div mb={2} pl={10} pt={15} pb={15} bg={focusX ? '#bfdbfe' : '#eff6ff'}>
-        <Text style={styles.selectedTextStyle}>{item.label}</Text>
+      <Div
+        // mb={2}
+        pl={10}
+        pt={15}
+        pb={15}
+        bg={focusX ? theme.colors.background : theme.colors.inputBack}>
+        <Text size={16} color={theme.colors.text.primary}>
+          {item.label}
+        </Text>
       </Div>
     );
   };
-  console.log('errors', errors);
-  console.log('formData', formData);
+
   return (
     <Modal
       animationType="slide"
@@ -223,9 +300,14 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     bc={theme.colors.inputBorder}
                     style={{elevation: 0}}>
                     <MultiSelect
-                      containerStyle={{backgroundColor: theme.colors.inputBack}}
+                      containerStyle={{
+                        backgroundColor: theme.colors.inputBack,
+                        borderColor: theme.colors.inputBorder,
+                        borderWidth: 2,
+                      }}
                       style={[
                         {
+                          borderColor: 'transparent',
                           width: '100%',
                           backgroundColor: theme.colors.inputBack,
                         },
@@ -233,13 +315,19 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       ]}
                       placeholderStyle={{color: theme.colors.text.primary}}
                       inputSearchStyle={{
+                        color: theme.colors.text.primary,
+                        fontSize: 16 / fontScale,
+                        borderColor: theme.colors.inputBorder,
+                        borderRadius: 10,
+
+                        paddingHorizontal: 6,
                         backgroundColor: theme.colors.inputBack,
                       }}
                       iconStyle={styles.iconStyle}
-                      data={data}
+                      data={usersData}
                       search
                       maxHeight={300}
-                      onChangeText={ek => console.log(ek)}
+                      // onChangeText={text => text}
                       labelField="label"
                       valueField="value"
                       selectedTextStyle={styles.selectedTextStyle}
@@ -250,7 +338,8 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       renderItem={renderItem}
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
-                      onChange={item => {
+                      onChange={(item, label, image) => {
+                        console.log('l', item);
                         const newFormData = {...formData, assignTo: [...item]};
                         setFormData(newFormData);
 
@@ -268,14 +357,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                           });
                       }}
                       renderSelectedItem={(item, unSelect) => (
-                        <Touch
-                          mt={10}
-                          mr={8}
-                          br={20}
-                          pl={2}
-                          pr={2}
-                          bw={1}
-                          onPress={() => unSelect && unSelect(item)}>
+                        <Touch mt={10} mr={8} br={20} pl={2} pr={2} bw={1}>
                           <Flex pl={5} pr={10} pt={2} pb={2} middle>
                             <Image
                               style={{
@@ -285,7 +367,9 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                                 borderRadius: 50,
                               }}
                               source={{
-                                uri: 'https://reactnative.dev/img/tiny_logo.png',
+                                uri: item.profile
+                                  ? `data:image/jpeg;base64,${item.profile}`
+                                  : `https://png.pngtree.com/png-vector/20240914/ourlarge/pngtree-cartoon-user-avatar-vector-png-image_13572228.png`,
                               }}
                             />
                             <Text
@@ -296,19 +380,21 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                               style={{}}>
                               {item.label}
                             </Text>
-                            <Svg
-                              width="15"
-                              height="15"
-                              viewBox="0 0 14 14"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <Path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M0.292893 0.292893C0.683417 -0.0976311 1.31658 -0.0976311 1.70711 0.292893L7 5.58579L12.2929 0.292893C12.6834 -0.0976311 13.3166 -0.0976311 13.7071 0.292893C14.0976 0.683417 14.0976 1.31658 13.7071 1.70711L8.41421 7L13.7071 12.2929C14.0976 12.6834 14.0976 13.3166 13.7071 13.7071C13.3166 14.0976 12.6834 14.0976 12.2929 13.7071L7 8.41421L1.70711 13.7071C1.31658 14.0976 0.683417 14.0976 0.292893 13.7071C-0.0976311 13.3166 -0.0976311 12.6834 0.292893 12.2929L5.58579 7L0.292893 1.70711C-0.0976311 1.31658 -0.0976311 0.683417 0.292893 0.292893Z"
-                                fill={theme.colors.text.secondary}
-                              />
-                            </Svg>
+                            <Touch onPress={() => unSelect && unSelect(item)}>
+                              <Svg
+                                width="15"
+                                height="15"
+                                viewBox="0 0 14 14"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <Path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M0.292893 0.292893C0.683417 -0.0976311 1.31658 -0.0976311 1.70711 0.292893L7 5.58579L12.2929 0.292893C12.6834 -0.0976311 13.3166 -0.0976311 13.7071 0.292893C14.0976 0.683417 14.0976 1.31658 13.7071 1.70711L8.41421 7L13.7071 12.2929C14.0976 12.6834 14.0976 13.3166 13.7071 13.7071C13.3166 14.0976 12.6834 14.0976 12.2929 13.7071L7 8.41421L1.70711 13.7071C1.31658 14.0976 0.683417 14.0976 0.292893 13.7071C-0.0976311 13.3166 -0.0976311 12.6834 0.292893 12.2929L5.58579 7L0.292893 1.70711C-0.0976311 1.31658 -0.0976311 0.683417 0.292893 0.292893Z"
+                                  fill={theme.colors.text.secondary}
+                                />
+                              </Svg>
+                            </Touch>
                           </Flex>
                         </Touch>
                       )}
@@ -392,8 +478,10 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     <TextInput
                       multiline
                       numberOfLines={5}
-                      // value={formData.phNumber}
-                      // onChangeText={value => handleInputChange('phNumber', value)}
+                      value={formData.description}
+                      onChangeText={value =>
+                        handleInputChange('description', value)
+                      }
                       placeholderTextColor={theme.colors.text.secondary}
                       placeholder="Enter task description"
                       style={[
@@ -461,6 +549,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                         transform: [{translateX: animatedValue}],
                       }}
                     />
+
                     {priorityList.map((el, index) => (
                       <AnimatedTouchable
                         key={index}
@@ -561,15 +650,26 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     </Flex>
                   </ScrollView>
                 </Div>
-                <Button
-                  mb={20}
-                  onPress={() => submitBtn()}
-                  mt={'2%'}
-                  child={
-                    <Text color={theme.colors.text.inverse} bold size={18}>
-                      Create Task
-                    </Text>
-                  }></Button>
+                {loading ? (
+                  <Button
+                    mb={20}
+                    mt={'2%'}
+                    child={
+                      <Text color={theme.colors.text.inverse} bold size={18}>
+                        Loading...
+                      </Text>
+                    }></Button>
+                ) : (
+                  <Button
+                    mb={20}
+                    onPress={() => submitBtn()}
+                    mt={'2%'}
+                    child={
+                      <Text color={theme.colors.text.inverse} bold size={18}>
+                        Create Task
+                      </Text>
+                    }></Button>
+                )}
               </Container>
             </ScrollView>
           </Gradient>
@@ -622,12 +722,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  selectedTextStyle: {
-    fontSize: 14,
-
-    color: 'red',
-  },
-  selectedStyle: {
-    borderRadius: 12,
-  },
+  selectedTextStyle: {},
+  selectedStyle: {},
 });
