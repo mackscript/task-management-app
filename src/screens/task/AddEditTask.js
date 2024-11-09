@@ -174,7 +174,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
       dispatch(submitTask(newValues))
         .unwrap()
         .then(res => {
-          console.log('res', res?.status?.message);
+          animateBackground('low');
           toast.show(`Task Create successfully!`, {
             type: 'success',
             placement: 'top',
@@ -191,7 +191,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
             image: [],
           });
           setStartDate(new Date());
-          animateBackground('low');
+
           setLoading(false);
           closeModalBack();
           setImages([]);
@@ -561,6 +561,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                           justifyContent: 'center',
                         }}>
                         <Text
+                          cp
                           size={16}
                           bold
                           color={

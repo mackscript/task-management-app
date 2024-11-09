@@ -4,7 +4,7 @@
 
 // }
 // getIp();
-const ip = '192.168.122.73';
+const ip = '192.168.10.73';
 
 export const baseURL = `http://${ip}:8080/api/v1`;
 // export const baseURL =
