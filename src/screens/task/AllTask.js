@@ -99,16 +99,43 @@ const Task = props => {
 
   return (
     <MainLayout child={props} showHeader sName="" pf wl>
-      <Div mb={80} style={{flex: 1}}>
+      <Div mb={70} style={{flex: 1}}>
         <Agenda
-          hideKnob={true}
           theme={{
-            agendaDayTextColor: theme.colors.primary,
+            agendaDayTextColor: 'yellow',
             agendaDayNumColor: 'green',
             agendaTodayColor: 'red',
             agendaKnobColor: 'blue',
-            // calendarBackground: theme.colors.primary,
-            // reservationsBackgroundColor: theme.colors.secondary,
+
+            backgroundColor: 'red',
+            calendarBackground: theme.colors.secondary,
+            textSectionTitleColor: theme.colors.text.secondary,
+            selectedDayBackgroundColor: theme.colors.primary,
+            selectedDayTextColor: '#fff',
+            todayTextColor: 'blue',
+            textSectionTitleDisabledColor: theme.colors.text.secondary,
+
+            dayTextColor: theme.colors.text.secondary,
+            textDisabledColor: 'gray',
+            dotColor: '#00adf5',
+            selectedDotColor: '#00adf5',
+
+            monthTextColor: theme.colors.text.secondary,
+            indicatorColor: theme.colors.primary,
+
+            textDayFontFamily: 'monospace',
+            textMonthFontFamily: 'monospace',
+            textDayHeaderFontFamily: 'monospace',
+            textDayFontWeight: '300',
+            textMonthFontWeight: 'bold',
+            textDayHeaderFontWeight: '300',
+            textDayFontSize: 16,
+            textMonthFontSize: 16,
+            textDayHeaderFontSize: 16,
+          }}
+          // hideKnob={true}
+          onDayPress={day => {
+            console.log('day pressed');
           }}
           enableSwipeMonths={true}
           // style={{backgroundColor: theme.colors.primary}}
@@ -129,7 +156,9 @@ const Task = props => {
             return (
               <TouchableOpacity
                 style={{
-                  backgroundColor: items.data ? theme.colors.primary : '#fff',
+                  backgroundColor: items.data
+                    ? theme.colors.primary
+                    : 'transparent',
                   flex: 1,
                   borderRadius: 5,
                   padding: 10,
@@ -138,7 +167,7 @@ const Task = props => {
                   marginTop: 20,
                   paddingBottom: 20,
                 }}>
-                <Text size={fontSize} color={color}>
+                <Text size={fontSize} color={theme.colors.primary}>
                   {items.name}
                 </Text>
                 <Text size={fontSize} color={color}>

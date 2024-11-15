@@ -39,8 +39,8 @@ const SignInScreen = props => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'mikuhtmljs@gmail.com',
+    password: 'Mack@123',
   });
 
   const validationSchema = Yup.object().shape({
@@ -101,6 +101,7 @@ const SignInScreen = props => {
           });
         })
         .catch(err => {
+          console.log('err', err);
           toast.hideAll();
           toast.show(`${err?.status?.message}`, {
             type: 'error',
@@ -206,6 +207,7 @@ const SignInScreen = props => {
                   <User2Icon width={23} height={22} />
                 </Div>
                 <TextInput
+                  value={formData.email}
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your email"
                   style={[style.inputStyle, {color: theme.colors.text.primary}]}
@@ -234,6 +236,7 @@ const SignInScreen = props => {
                   <LockIcon width={23} height={22} />
                 </Div>
                 <TextInput
+                  value={formData.password}
                   placeholderTextColor={theme.colors.text.secondary}
                   placeholder="Enter your password"
                   style={[style.inputStyle, {color: theme.colors.text.primary}]}
