@@ -79,6 +79,7 @@ const MainLayout = ({
           <View
             style={{
               // height: 50,
+              marginBottom: 10,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',

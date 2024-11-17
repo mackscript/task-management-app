@@ -177,6 +177,7 @@ export const Text = props => {
           ? {fontSize: props.size / fontScale}
           : {fontSize: 14 / fontScale},
         {fontFamily: 'AlegreyaSans-Italic'},
+        props.br != undefined ? {borderRadius: props.br} : null,
         props.center != undefined ? {textAlign: 'center'} : null,
         props.right != undefined ? {textAlign: 'right'} : null,
         props.ml != undefined ? {marginLeft: props.ml} : null,

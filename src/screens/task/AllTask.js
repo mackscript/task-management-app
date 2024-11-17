@@ -1,10 +1,11 @@
-import React, {cloneElement, useEffect, useState} from 'react';
+import React, {cloneElement, useCallback, useEffect, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
-import {Div, Flex, Text, Touch} from '../../components/common/UI';
+import {Container, Div, Flex, Text, Touch} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
 import {Button, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Agenda, Calendar} from 'react-native-calendars';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Task = props => {
   const {theme} = useSelector(state => state.theme);
@@ -14,51 +15,80 @@ const Task = props => {
   const [items, setItems] = useState({
     '2024-11-11': [
       {
-        name: 'Meeting 1',
+        priority: '',
+        priorityColor: 'blue',
+        title: 'Meeting 1',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
     '2024-11-12': [
       {
-        name: 'Meeting 2',
+        title: 'Meeting 2',
+        priority: 'high',
+        priorityColor: 'blue',
+        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
+      },
+      {
+        title: 'Meeting 2',
+        priority: 'low',
+        priorityColor: 'red',
+        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
+      },
+      {
+        title: 'Meeting 2',
+        priority: 'medium',
+        priorityColor: 'green',
+        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
+      },
+      {
+        title: 'Meeting 2',
+        priority: '',
+        priorityColor: 'yellow',
+        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
+      },
+      {
+        title: 'Meeting 2',
+        priority: '',
+        priorityColor: 'red',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
     '2024-11-13': [
       {
-        name: 'Meeting 3',
+        title: 'Meeting 3',
+        priority: '',
+        priorityColor: 'red',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
     '2024-11-15': [
       {
-        name: 'Meeting 5',
+        title: 'Meeting 5',
+        priority: '',
+        priorityColor: 'red',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
     '2024-11-16': [
       {
-        name: 'Meeting 6',
+        title: 'Meeting 6',
+        priority: '',
+        priorityColor: 'red',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
     '2024-11-17': [
       {
-        name: 'Meeting 7',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-      {
-        name: 'Meeting 7',
+        title: 'Meeting 7',
+        priority: 'medium',
+        priorityColor: 'red',
         data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
       },
     ],
   });
 
-  // useEffect(() => {
-  //   loadItems(day);
-  // }, [day]);
-
   const loadItems = day => {
+    console.log('day', day);
     const newItems = {...items};
 
     setTimeout(() => {
@@ -72,13 +102,13 @@ const Task = props => {
           const numItems = Math.floor(Math.random() * 3 + 1);
           for (let j = 0; j < numItems; j++) {
             newItems[strTime].push({
-              name: 'No Data Found',
+              title: 'No Data Found',
               data: null,
             });
           }
         }
       }
-      setItems(newItems);
+      // setItems(newItems);
     }, 1000);
   };
 
@@ -111,135 +141,176 @@ const Task = props => {
     setSelectedDate(currentDate.toISOString().split('T')[0]); // Update selected date
   };
 
+  useEffect(() => {
+    const unsubscribeFocus = props.navigation.addListener('focus', () => {
+      setSelectedDate(new Date());
+      console.log('call');
+    });
+    return () => {
+      unsubscribeFocus();
+    };
+  }, []);
+
   return (
-    <MainLayout child={props} showHeader sName="" pf wl>
+    <MainLayout child={props} showHeader sName="" wl pf>
       <Div mb={70} style={{flex: 1}}>
-        <Agenda
-          key={theme.colors.primary}
-          theme={{
-            agendaKnobColor: '#768390',
-            dayTextColor: '#fff',
-            agendaDayTextColor: 'yellow',
-            agendaDayNumColor: 'green',
-            agendaTodayColor: 'red',
-            // agendaKnobColor: 'blue',
-            reservationsBackgroundColor: theme.colors.secondary,
-            backgroundColor: 'red',
-            calendarBackground: theme.colors.primary,
-            textSectionTitleColor: theme.colors.text.secondary,
-            selectedDayBackgroundColor: theme.colors.secondary,
-            selectedDayTextColor: theme.colors.text.primary,
-            todayTextColor: 'blue',
-            textSectionTitleDisabledColor: theme.colors.text.secondary,
+        <Container ml mr height={100}>
+          <Text bold>Filter</Text>
+        </Container>
+        <Div style={{flex: 1}}>
+          <Agenda
+            key={theme.colors.primary}
+            theme={{
+              agendaKnobColor: '#768390',
+              dayTextColor: '#768390',
+              agendaDayTextColor: theme.colors.text.secondary,
+              agendaDayNumColor: theme.colors.text.primary,
+              agendaTodayColor: theme.colors.primary,
+              // agendaKnobColor: 'blue',
+              reservationsBackgroundColor: theme.colors.secondary,
+              calendarBackground: theme.gradBG.dark,
+              backgroundColor: 'red',
 
-            textDisabledColor: 'gray',
-            dotColor: '#00adf5',
-            selectedDotColor: '#00adf5',
+              textSectionTitleColor: '#43515c',
+              selectedDayBackgroundColor: theme.colors.secondary,
+              selectedDayTextColor: theme.colors.primary,
+              todayTextColor: 'blue',
+              textSectionTitleDisabledColor: theme.colors.text.secondary,
 
-            monthTextColor: theme.colors.text.secondary,
-            indicatorColor: theme.colors.primary,
+              textDisabledColor: 'gray',
+              dotColor: '#00adf5',
+              selectedDotColor: '#00adf5',
 
-            textDayFontFamily: 'monospace',
-            textMonthFontFamily: 'monospace',
-            textDayHeaderFontFamily: 'monospace',
-            textDayFontWeight: '300',
-            textMonthFontWeight: 'bold',
-            textDayHeaderFontWeight: '300',
-            textDayFontSize: 16,
-            textMonthFontSize: 16,
-            textDayHeaderFontSize: 16,
-          }}
-          renderKnob={() => {
-            return (
-              <View style={{height: 14, padding: 4}}>
-                <View
+              monthTextColor: theme.colors.text.secondary,
+              indicatorColor: theme.colors.primary,
+
+              textDayFontFamily: 'monospace',
+              textMonthFontFamily: 'monospace',
+              textDayHeaderFontFamily: 'monospace',
+              textDayFontWeight: '300',
+              textMonthFontWeight: 'bold',
+              textDayHeaderFontWeight: '300',
+              textDayFontSize: 16,
+              textMonthFontSize: 16,
+              textDayHeaderFontSize: 16,
+            }}
+            renderKnob={() => {
+              return (
+                <View style={{height: 14, padding: 4}}>
+                  <View
+                    style={{
+                      height: '100%',
+                      width: 40,
+                      backgroundColor: '#DCDCDC',
+                      borderRadius: 4,
+                      borderWidth: 1,
+                      borderColor: '#DCDCDC',
+                    }}
+                  />
+                </View>
+              );
+            }}
+            onDayPress={day => {
+              console.log('day pressed');
+            }}
+            // enableSwipeMonths={true}
+            loadItemsForMonth={loadItems}
+            rowHasChanged={rowHasChanged}
+            showClosingKnob={true}
+            renderEmptyDate={renderEmptyDate}
+            items={items}
+            selected={selectedDate}
+            markedDates={{
+              '2024-11-11': {selected: false, marked: true},
+              '2024-11-12': {marked: true},
+              '2024-11-14': {disabled: true},
+            }}
+            // renderList={listProps => {
+            //   return <View></View>;
+            // }}
+            renderItem={(items, isFirst) => {
+              // const fontSize = isFirst ? 18 : 14;
+              const color = '#43515c';
+              return (
+                <TouchableOpacity
                   style={{
-                    height: '100%',
-                    width: 40,
-                    backgroundColor: '#DCDCDC',
-                    borderRadius: 4,
-                    borderWidth: 1,
-                    borderColor: '#DCDCDC',
-                  }}
-                />
-              </View>
-            );
-          }}
-          onDayPress={day => {
-            console.log('day pressed');
-          }}
-          // enableSwipeMonths={true}
-          loadItemsForMonth={loadItems}
-          rowHasChanged={rowHasChanged}
-          showClosingKnob={true}
-          renderEmptyDate={renderEmptyDate}
-          items={items}
-          selected={selectedDate}
-          markedDates={{
-            '2024-11-11': {selected: false, marked: true},
-            '2024-11-12': {marked: true},
-            '2024-11-14': {disabled: true},
-          }}
-          renderItem={(items, isFirst) => {
-            // const fontSize = isFirst ? 18 : 14;
-            const color = isFirst ? '#FFF' : '#43515c';
-            return (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: items.data
-                    ? theme.colors.primary
-                    : 'transparent',
-                  flex: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  marginRight: 10,
+                    backgroundColor: items.data
+                      ? theme.gradBG.dark
+                      : 'transparent',
+                    flex: 1,
+                    borderRadius: 12,
+                    padding: 10,
+                    marginTop: 20,
+                    marginRight: 6,
+                    paddingBottom: 20,
+                    borderLeftWidth: 6,
+                    borderColor: items.priorityColor,
+                  }}>
+                  <View
+                    style={{
+                      position: 'absolute',
 
-                  marginTop: 20,
-                  paddingBottom: 20,
-                }}>
-                <Text
-                  size={18}
-                  color={
-                    items.data
-                      ? theme.colors.text.primary
-                      : theme.colors.text.secondary
-                  }>
-                  {items.name}
-                </Text>
-                <Text size={16} color={color}>
-                  {items.data}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-          showOnlySelectedDayItems></Agenda>
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            top: 0,
-            right: 0,
-            backgroundColor: 'red',
-            // width: 20,
-            height: 20,
-          }}
-          title="Next Week"
-          onPress={handleNextWeek}>
-          <Text>Next</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            top: 0,
-            backgroundColor: 'red',
-            // width: 20,
-            height: 20,
-          }}
-          title="Previous Week"
-          onPress={handlePreviousWeek}>
-          <Text>Previous</Text>
-        </TouchableOpacity>
+                      backgroundColor: 'red',
+                      zIndex: 3,
+                      left: -50,
+                    }}></View>
+                  <Flex p={0} mb={4}>
+                    <Text
+                      size={16}
+                      bold
+                      color={
+                        items.data
+                          ? theme.colors.text.primary
+                          : theme.colors.text.secondary
+                      }>
+                      {items.title}
+                    </Text>
+                    <Text
+                      size={16}
+                      ml={10}
+                      pr={6}
+                      br={6}
+                      pl={6}
+                      bg={theme.colors.primary}
+                      color={'#fff'}>
+                      #{items.priority}
+                    </Text>
+                  </Flex>
+                  <Text size={16} color={color}>
+                    {items.data}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+            showOnlySelectedDayItems></Agenda>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              zIndex: 1,
+              top: -20,
+              right: 0,
+              backgroundColor: 'red',
+              // width: 20,
+              height: 20,
+            }}
+            title="Next Week"
+            onPress={handleNextWeek}>
+            <Text> ">" </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              zIndex: 1,
+              top: -20,
+              backgroundColor: 'red',
+              // width: 20,
+              height: 20,
+            }}
+            title="Previous Week"
+            onPress={handlePreviousWeek}>
+            <Text> ">" </Text>
+          </TouchableOpacity>
+        </Div>
       </Div>
     </MainLayout>
   );

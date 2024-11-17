@@ -287,7 +287,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
               {/* // inputs / */}
               <Container width={'95%'} ml mr>
                 <Div>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Assign User
                   </Text>
                   <Flex
@@ -316,7 +316,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       placeholderStyle={{color: theme.colors.text.primary}}
                       inputSearchStyle={{
                         color: theme.colors.text.primary,
-                        fontSize: 16 / fontScale,
+                        fontSize: 14 / fontScale,
                         borderColor: theme.colors.inputBorder,
                         borderRadius: 10,
 
@@ -429,7 +429,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                   </Flex> */}
                 </Div>
                 <Div mt={15}>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Title
                   </Text>
                   <Flex
@@ -460,7 +460,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                   </Text>
                 </Div>
                 <Div mt={15}>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Description
                   </Text>
                   <Flex
@@ -497,7 +497,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                   {/* <Text color={theme.colors.error}>{errors?.phNumber}</Text> */}
                 </Div>
                 <Div mt={15}>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Due Date
                   </Text>
                   <Touch onPress={() => setIsDatePickerVisible(true)}>
@@ -513,7 +513,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                       style={{
                         elevation: 0,
                       }}>
-                      <Text size={18} color={theme.colors.text.primary}>
+                      <Text size={16} color={theme.colors.text.primary}>
                         {moment(startDate).format('DD/MM/YYYY')}
                       </Text>
                     </Flex>
@@ -522,7 +522,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                 </Div>
 
                 <Div mt={15}>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Priority
                   </Text>
                   <Flex
@@ -542,7 +542,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                     <Animated.View
                       style={{
                         position: 'absolute',
-                        height: 50,
+                        height: 40,
                         width: buttonWidth,
                         backgroundColor: theme.colors.default, // Your desired color
                         borderRadius: 6,
@@ -556,13 +556,13 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                         onPress={() => animateBackground(el)}
                         style={{
                           width: '30%',
-                          height: 50,
+                          height: 40,
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}>
                         <Text
                           cp
-                          size={16}
+                          size={14}
                           bold
                           color={
                             el === formData.priority
@@ -577,7 +577,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
                   </Flex>
                 </Div>
                 <Div mt={15}>
-                  <Text size={18} mb={6} color={theme.colors.text.secondary}>
+                  <Text size={16} mb={6} color={theme.colors.text.secondary}>
                     Images
                   </Text>
                   <Touch
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     flex: 1,
-    fontSize: 16 / fontScale,
+    fontSize: 14 / fontScale,
     paddingHorizontal: 6,
   },
   modalView: {
