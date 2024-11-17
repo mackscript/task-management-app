@@ -18,6 +18,7 @@ import UI, {Button, Div, Text, Touch} from '../common/UI';
 import {toggleTheme} from '../../redux/reducer/themeSlice';
 import Svg, {Path} from 'react-native-svg';
 import {logout} from '../../redux/reducer/OtpVerifySlicer';
+import RNRestart from 'react-native-restart'; // Import package from node modules
 
 const MainLayout = ({
   children,
@@ -179,6 +180,7 @@ const MainLayout = ({
                 <Touch
                   onPress={() => {
                     dispatch(toggleTheme());
+                    // RNRestart.restart();
                   }}
                   bg={theme.colors.primary}
                   width={50}

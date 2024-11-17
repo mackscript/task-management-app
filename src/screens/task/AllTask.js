@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {cloneElement, useEffect, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {Div, Flex, Text, Touch} from '../../components/common/UI';
 import {useSelector} from 'react-redux';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {Button, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Agenda, Calendar} from 'react-native-calendars';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const Task = props => {
   const {theme} = useSelector(state => state.theme);
   const {userData} = useSelector(state => state.auth);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [items, setItems] = useState({
     '2024-11-11': [
       {
@@ -80,6 +81,7 @@ const Task = props => {
       setItems(newItems);
     }, 1000);
   };
+
   const timeToString = time => {
     const date = new Date(time);
     return date.toISOString().split('T')[0];
@@ -97,25 +99,39 @@ const Task = props => {
     return r1.name !== r2.name;
   };
 
+  const handleNextWeek = () => {
+    const currentDate = new Date(selectedDate);
+    currentDate.setDate(currentDate.getDate() + 7); // Move to next week
+    setSelectedDate(currentDate.toISOString().split('T')[0]); // Update selected date
+  };
+
+  const handlePreviousWeek = () => {
+    const currentDate = new Date(selectedDate);
+    currentDate.setDate(currentDate.getDate() - 7); // Move to previous week
+    setSelectedDate(currentDate.toISOString().split('T')[0]); // Update selected date
+  };
+
   return (
     <MainLayout child={props} showHeader sName="" pf wl>
       <Div mb={70} style={{flex: 1}}>
         <Agenda
+          key={theme.colors.primary}
           theme={{
+            agendaKnobColor: '#768390',
+            dayTextColor: '#fff',
             agendaDayTextColor: 'yellow',
             agendaDayNumColor: 'green',
             agendaTodayColor: 'red',
-            agendaKnobColor: 'blue',
-
+            // agendaKnobColor: 'blue',
+            reservationsBackgroundColor: theme.colors.secondary,
             backgroundColor: 'red',
-            calendarBackground: theme.colors.secondary,
+            calendarBackground: theme.colors.primary,
             textSectionTitleColor: theme.colors.text.secondary,
-            selectedDayBackgroundColor: theme.colors.primary,
-            selectedDayTextColor: '#fff',
+            selectedDayBackgroundColor: theme.colors.secondary,
+            selectedDayTextColor: theme.colors.text.primary,
             todayTextColor: 'blue',
             textSectionTitleDisabledColor: theme.colors.text.secondary,
 
-            dayTextColor: theme.colors.text.secondary,
             textDisabledColor: 'gray',
             dotColor: '#00adf5',
             selectedDotColor: '#00adf5',
@@ -133,25 +149,39 @@ const Task = props => {
             textMonthFontSize: 16,
             textDayHeaderFontSize: 16,
           }}
-          // hideKnob={true}
+          renderKnob={() => {
+            return (
+              <View style={{height: 14, padding: 4}}>
+                <View
+                  style={{
+                    height: '100%',
+                    width: 40,
+                    backgroundColor: '#DCDCDC',
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    borderColor: '#DCDCDC',
+                  }}
+                />
+              </View>
+            );
+          }}
           onDayPress={day => {
             console.log('day pressed');
           }}
-          enableSwipeMonths={true}
-          // style={{backgroundColor: theme.colors.primary}}
+          // enableSwipeMonths={true}
           loadItemsForMonth={loadItems}
           rowHasChanged={rowHasChanged}
           showClosingKnob={true}
           renderEmptyDate={renderEmptyDate}
-          selected={'2024-11-13'}
           items={items}
+          selected={selectedDate}
           markedDates={{
             '2024-11-11': {selected: false, marked: true},
             '2024-11-12': {marked: true},
             '2024-11-14': {disabled: true},
           }}
           renderItem={(items, isFirst) => {
-            const fontSize = isFirst ? 16 : 14;
+            // const fontSize = isFirst ? 18 : 14;
             const color = isFirst ? '#FFF' : '#43515c';
             return (
               <TouchableOpacity
@@ -167,20 +197,49 @@ const Task = props => {
                   marginTop: 20,
                   paddingBottom: 20,
                 }}>
-                <Text size={fontSize} color={theme.colors.primary}>
+                <Text
+                  size={18}
+                  color={
+                    items.data
+                      ? theme.colors.text.primary
+                      : theme.colors.text.secondary
+                  }>
                   {items.name}
                 </Text>
-                <Text size={fontSize} color={color}>
+                <Text size={16} color={color}>
                   {items.data}
                 </Text>
               </TouchableOpacity>
             );
           }}
-          showOnlySelectedDayItems
-          // The list of items that have to be displayed in agenda. If you want to render item as empty date
-          // the value of date key has to be an empty array []. If there exists no value for date key it is
-          // considered that the date in question is not yet loaded
-        />
+          showOnlySelectedDayItems></Agenda>
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            top: 0,
+            right: 0,
+            backgroundColor: 'red',
+            // width: 20,
+            height: 20,
+          }}
+          title="Next Week"
+          onPress={handleNextWeek}>
+          <Text>Next</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            top: 0,
+            backgroundColor: 'red',
+            // width: 20,
+            height: 20,
+          }}
+          title="Previous Week"
+          onPress={handlePreviousWeek}>
+          <Text>Previous</Text>
+        </TouchableOpacity>
       </Div>
     </MainLayout>
   );
