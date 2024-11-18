@@ -699,7 +699,7 @@ const AddEditTask = ({showModal, setShowModal, title}) => {
 export default AddEditTask;
 const styles = StyleSheet.create({
   centeredView: {
-    marginTop: '5%',
+    marginTop: Platform.OS == 'ios' ? '20%' : '5%',
     flex: 1,
     width: '100%',
     elevation: 10,

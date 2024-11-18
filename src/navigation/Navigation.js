@@ -41,12 +41,12 @@ const TabView = () => {
         tabBarStyle: {
           // backgroundColor: 'transparent', // Make the tab bar background transparent
           backgroundColor: theme.mode == 'dark' ? theme.colors.primary : '#fff',
-          height: 70,
-          borderTopEndRadius: 15,
-          borderTopStartRadius: 15,
+          height: Platform.OS == 'ios' ? 100 : 70,
+          // borderTopEndRadius: 15,
+          // borderTopStartRadius: 15,
 
           // paddingBottom: 5,
-          position: 'absolute',
+          // position: 'absolute',
           // borderTopColor: '#94a3b8',
           borderTopWidth: 0, //if its 0 then hide margin top
           paddingHorizontal: 6,

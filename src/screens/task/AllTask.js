@@ -1,91 +1,25 @@
 import React, {cloneElement, useCallback, useEffect, useState} from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import {Container, Div, Flex, Text, Touch} from '../../components/common/UI';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Button, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Agenda, Calendar} from 'react-native-calendars';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useFocusEffect} from '@react-navigation/native';
+import Svg, {Path} from 'react-native-svg';
+import {getAllTaskById} from '../../redux/reducer/TaskSlicer';
+import moment from 'moment';
 
 const Task = props => {
+  const dispatch = useDispatch();
+  const {getTaskByID, getTaskLoading} = useSelector(state => state.task);
+
+  console.log('getTaskByID, getTaskLoading', getTaskByID, getTaskLoading);
   const {theme} = useSelector(state => state.theme);
   const {userData} = useSelector(state => state.auth);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [items, setItems] = useState({
-    '2024-11-11': [
-      {
-        priority: '',
-        priorityColor: 'blue',
-        title: 'Meeting 1',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-    '2024-11-12': [
-      {
-        title: 'Meeting 2',
-        priority: 'high',
-        priorityColor: 'blue',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-      {
-        title: 'Meeting 2',
-        priority: 'low',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-      {
-        title: 'Meeting 2',
-        priority: 'medium',
-        priorityColor: 'green',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-      {
-        title: 'Meeting 2',
-        priority: '',
-        priorityColor: 'yellow',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-      {
-        title: 'Meeting 2',
-        priority: '',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-    '2024-11-13': [
-      {
-        title: 'Meeting 3',
-        priority: '',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-    '2024-11-15': [
-      {
-        title: 'Meeting 5',
-        priority: '',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-    '2024-11-16': [
-      {
-        title: 'Meeting 6',
-        priority: '',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-    '2024-11-17': [
-      {
-        title: 'Meeting 7',
-        priority: 'medium',
-        priorityColor: 'red',
-        data: 'Contrary to popular belief, Lorem Ipsum is not simply random text.',
-      },
-    ],
-  });
+  const [items, setItems] = useState({});
 
   const loadItems = day => {
     console.log('day', day);
@@ -145,18 +79,45 @@ const Task = props => {
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
       setSelectedDate(new Date());
       console.log('call');
+      fetchApi(selectedDate);
     });
     return () => {
       unsubscribeFocus();
     };
   }, []);
 
+  useEffect(() => {
+    console.log('call ', Object.entries(getTaskByID).length);
+    if (Object.entries(getTaskByID).length !== 0) {
+      setItems(getTaskByID);
+      cosnt = moment(selectedDate).format('YYYY-MM-DD');
+    } else {
+      setItems({
+        [moment(selectedDate).format('YYYY-MM-DD')]: [
+          {
+            title: 'API Integration',
+            desc: 'Successfully integrated the payment gateway API.',
+            priority: 'high',
+            image: [
+              'https://example.com/image5.jpg',
+              'https://example.com/image6.jpg',
+            ],
+            status: null,
+          },
+        ],
+      });
+    }
+  }, [getTaskByID, selectedDate]);
+
+  const fetchApi = date => {
+    dispatch(getAllTaskById(moment(date).format('YYYY-MM-DD')));
+  };
   return (
     <MainLayout child={props} showHeader sName="" wl pf>
-      <Div mb={70} style={{flex: 1}}>
-        <Container ml mr height={100}>
+      <Div style={{flex: 1}}>
+        {/* <Container ml mr height={100}>
           <Text bold>Filter</Text>
-        </Container>
+        </Container> */}
         <Div style={{flex: 1}}>
           <Agenda
             key={theme.colors.primary}
@@ -211,7 +172,8 @@ const Task = props => {
               );
             }}
             onDayPress={day => {
-              console.log('day pressed');
+              fetchApi(day.dateString);
+              console.log('day pressed', day);
             }}
             // enableSwipeMonths={true}
             loadItemsForMonth={loadItems}
@@ -289,26 +251,54 @@ const Task = props => {
               zIndex: 1,
               top: -20,
               right: 0,
-              backgroundColor: 'red',
+              // backgroundColor: 'red',
               // width: 20,
               height: 20,
             }}
             title="Next Week"
             onPress={handleNextWeek}>
-            <Text> ">" </Text>
+            <Text>
+              <Svg
+                width="14"
+                height="15"
+                viewBox="0 0 14 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <Path
+                  d="M9 2L4.83 7L9 12"
+                  stroke="#fff"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </Svg>
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
               position: 'absolute',
               zIndex: 1,
               top: -20,
-              backgroundColor: 'red',
+              // backgroundColor: 'red',
               // width: 20,
               height: 20,
             }}
             title="Previous Week"
             onPress={handlePreviousWeek}>
-            <Text> ">" </Text>
+            <Svg
+              width="14"
+              height="15"
+              viewBox="0 0 14 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <Path
+                d="M9 2L4.83 7L9 12"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </Svg>
           </TouchableOpacity>
         </Div>
       </Div>

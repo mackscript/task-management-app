@@ -6,6 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // For Rea
 
 const initialState = {
   isLoadingTaskCreate: false,
+
+  getTaskByID: {},
+  getTaskLoading: false,
+
+  getTaskMarks: null,
+  getMarksLoading: false,
 };
 
 export const submitTask = createAsyncThunk(
@@ -13,6 +19,20 @@ export const submitTask = createAsyncThunk(
   async (values, {rejectWithValue}) => {
     try {
       const {data} = await axiosInstance.post(`/task/create`, values);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
+  },
+);
+
+export const getAllTaskById = createAsyncThunk(
+  'task/getTaskById',
+  async (values, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.get(
+        `/task/getTaskById?date=${values}`,
+      );
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data || 'An error occurred');
@@ -34,6 +54,18 @@ const taskSlice = createSlice({
       })
       .addCase(submitTask.rejected, (state, action) => {
         state.isLoadingTaskCreate = false;
+      })
+      .addCase(getAllTaskById.pending, state => {
+        state.getTaskLoading = true;
+        state.getTaskByID = {};
+      })
+      .addCase(getAllTaskById.fulfilled, (state, action) => {
+        state.getTaskLoading = false;
+        state.getTaskByID = action.payload?.data;
+      })
+      .addCase(getAllTaskById.rejected, (state, action) => {
+        state.getTaskLoading = false;
+        state.getTaskByID = {};
       });
   },
 });
