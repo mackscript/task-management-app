@@ -33,7 +33,7 @@ const MainLayout = ({
 }) => {
   const dispatch = useDispatch();
   const {theme} = useSelector(state => state.theme);
-  const {companyDetails} = useSelector(state => state.otp);
+  const {companyDetails, userData} = useSelector(state => state.otp);
 
   const backScreen = () => {
     child.navigation.goBack();
@@ -84,7 +84,7 @@ const MainLayout = ({
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: 10,
-              paddingTop: 10,
+              // paddingTop: 10,
               // backgroundColor: theme.colors.primary,
             }}>
             <Div width={'33.33%'}>
@@ -114,7 +114,7 @@ const MainLayout = ({
               {wl && (
                 <Div>
                   <Text
-                    size={25}
+                    size={20}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
@@ -122,7 +122,7 @@ const MainLayout = ({
                     Welcome to,
                   </Text>
                   <Text
-                    size={25}
+                    size={20}
                     style={{
                       color: theme.colors.text.primary,
                       textTransform: 'capitalize',
@@ -136,7 +136,7 @@ const MainLayout = ({
             <Div width={'33.33%'}>
               {sName && (
                 <Text
-                  size={30}
+                  size={20}
                   center
                   style={{
                     color: theme.colors.text.primary,
@@ -156,10 +156,10 @@ const MainLayout = ({
               {more && (
                 <Touch
                   onPress={() => {
-                    // dispatch(logout());
-                    // setTimeout(() => {
-                    //   child.navigation.navigate('SignInScreen');
-                    // }, 1000);
+                    dispatch(logout());
+                    setTimeout(() => {
+                      child.navigation.navigate('SignInScreen');
+                    }, 1000);
                   }}>
                   <Svg
                     width="24"
@@ -195,7 +195,7 @@ const MainLayout = ({
                   <Image
                     style={{width: 50, borderRadius: 50, height: 50}}
                     source={{
-                      uri: 'https://avatars.githubusercontent.com/u/68142061?v=4',
+                      uri: `data:image/jpeg;base64,${userData?.userInfo?.profilePhoto}`,
                     }}
                   />
                   {/* <View

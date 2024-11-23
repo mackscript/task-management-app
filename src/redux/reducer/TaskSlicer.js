@@ -40,6 +40,20 @@ export const getAllTaskById = createAsyncThunk(
   },
 );
 
+export const getAllMarkedTaskById = createAsyncThunk(
+  'task/getAllMarkedTaskById',
+  async (values, {rejectWithValue}) => {
+    try {
+      const {data} = await axiosInstance.get(
+        `/task/getTaskMarksByDate?date=${values}`,
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || 'An error occurred');
+    }
+  },
+);
+
 const taskSlice = createSlice({
   name: 'task',
   initialState,
@@ -66,6 +80,18 @@ const taskSlice = createSlice({
       .addCase(getAllTaskById.rejected, (state, action) => {
         state.getTaskLoading = false;
         state.getTaskByID = {};
+      })
+      .addCase(getAllMarkedTaskById.pending, state => {
+        state.getMarksLoading = true;
+        state.getTaskMarks = {};
+      })
+      .addCase(getAllMarkedTaskById.fulfilled, (state, action) => {
+        state.getMarksLoading = false;
+        state.getTaskMarks = action.payload?.data;
+      })
+      .addCase(getAllMarkedTaskById.rejected, (state, action) => {
+        state.getMarksLoading = false;
+        state.getTaskMarks = {};
       });
   },
 });
